@@ -187,7 +187,7 @@ Your application should be easy to set up, and should run on either Linux or
 Mac OS X. It should not require any non open-source software.
 
 There are many ways that this application could be built; we ask that you build
-it in a way that showcases one of your strengths. If you you enjoy front-end
+it in a way that showcases one of your strengths. If you enjoy front-end
 development, do something interesting with the interface. If you like
 object-oriented design, feel free to dive deeper into the domain model of this
 problem. We're happy to tweak the requirements slightly if it helps you show
@@ -204,7 +204,7 @@ Please modify `README.md` to add:
 ## Submission Instructions
 
 1. Clone the repository.
-1. Complete your project as described below within your local repository.
+1. Complete your project as described above within your local repository.
 1. Ensure everything you want to commit is committed.
 1. Create a git bundle: `git bundle create your_name.bundle --all`
 1. Email the bundle file to [dev.careers@waveapps.com](dev.careers@waveapps.com)
