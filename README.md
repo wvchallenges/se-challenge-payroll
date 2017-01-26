@@ -203,17 +203,6 @@ Please modify `README.md` to add:
 
 ## Submission Instructions
 
-1. Fork this project on GitHub. You will need to create an account if you don't
-   already have one.
-1. Complete the project as described below within your fork.
-1. Push all of your changes to your fork on GitHub and submit a pull request.
-1. You should also email [dev.careers@waveapps.com](dev.careers@waveapps.com)
-   and your recruiter to let them know you have submitted a solution. Make sure
-   to include your GitHub username in your email (so we can match applicants
-   with pull requests.)
-
-## Alternate Submission Instructions (if you don't want to publicize completing the challenge)
-
 1. Clone the repository.
 1. Complete your project as described below within your local repository.
 1. Ensure everything you want to commit is committed.
