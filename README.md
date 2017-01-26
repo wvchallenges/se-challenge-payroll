@@ -216,7 +216,9 @@ Please modify `README.md` to add:
 
 1. Clone the repository.
 1. Complete your project as described below within your local repository.
-1. Email a patch file to [dev.careers@waveapps.com](dev.careers@waveapps.com)
+1. Ensure everything you want to commit is committed.
+1. Create a git bundle: `git bundle create your_name.bundle --all`
+1. Email the bundle file to [dev.careers@waveapps.com](dev.careers@waveapps.com)
 
 ## Evaluation
 
