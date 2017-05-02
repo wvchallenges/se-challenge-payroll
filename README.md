@@ -118,7 +118,7 @@ As an example, a sample file with the following data:
 </tr>
 <tr>
   <td>
-    14/5/2016
+    14/11/2016
   </td>
   <td>
     5
