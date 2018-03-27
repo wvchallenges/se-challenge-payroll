@@ -23,7 +23,7 @@ have any questions.
 
 ## Project Description
 
-Imagine that this the early days of Wave's history, and that we are prototyping
+Imagine that this is the early days of Wave's history, and that we are prototyping
 a new payroll system with an early partner. Our partner is going to use our web
 app to determine how much each employee should be paid in each _pay period_, so
 it is critical that we get our numbers right.
