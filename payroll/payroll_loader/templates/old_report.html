@@ -1,0 +1,28 @@
+
+
+<!-- <h1>Articles</h1>
+<ul>
+  <h>Date - Employee - Hours - ReportID</h>
+{% for workday in object_list %}
+
+    <p>{{ workday.date }} - {{ workday.employeejobgroup.emploee_id}} - {{ workday.hours }} - {{ workday.report.report_footer }}</p>
+{% empty %}
+{% endfor %}
+</ul> -->
+
+<table style="width:100%">
+ <tr>
+   <th>Employee ID</th>
+   <th>Pay Period</th>
+   <th>Amount Paid</th>
+ </tr>
+ {% for paycheque in object_list %}
+ <tr>
+   <td>{{ paycheque.employee.employee_number }} </td>
+   <td>{{ paycheque.start_date }} - {{ paycheque.end_date }}</td>
+   <td>{{ paycheque.pay_amount }}</td>
+
+ {% empty %}
+ {% endfor %}
+
+</table>
