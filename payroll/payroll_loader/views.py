@@ -19,6 +19,7 @@ class IndexView(TemplateView):
 
     template_name = 'index.html'
 
+
 class WorkDayList(ListView):
 
     model = PayCheque
@@ -29,7 +30,9 @@ class WorkDayList(ListView):
     def get_queryset(self, **kwargs):
         return self.report_data_pack
 
+
 class CSVUploaderView(TemplateView):
+
     template_name = 'import.html'
 
     def post(self, request, *args, **kwargs):
@@ -127,7 +130,6 @@ class CSVUploaderView(TemplateView):
                 report=report,
                 pay_cheque=pay_cheque,
             )
-
 
         return redirect('payroll_report')
         # return HttpResponse(OK)
