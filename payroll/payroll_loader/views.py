@@ -69,9 +69,8 @@ class CSVUploaderView(TemplateView):
                     f'Job Group {job_group_input} does not exist'
                 )
 
-            pay_rate = job_group.values_list('pay_rate', flat=True)
+            pay_rate = job_group.values_list('pay_rate', flat=True)[0]
             job_group = job_group[0]
-            pay_rate = pay_rate[0]
 
             employee, _ = Employee.objects.get_or_create(
                 employee_number=employee_id_input,
@@ -91,7 +90,6 @@ class CSVUploaderView(TemplateView):
             )
 
             if not pay_cheque.exists():
-
                 pay_cheque = PayCheque.objects.create(
                     employee=employee,
                     pay_amount=0,
