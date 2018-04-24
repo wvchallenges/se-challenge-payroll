@@ -1,3 +1,24 @@
+# Install and Setup
+
+1. Fork and clone this repo
+2. Optionally setup a virtual environment (use Python3)
+3. Install requirements
+  - `pip install -r requirements.txt`
+4. Create a superuser
+   - `cd payroll`
+   - `python manage.py createsuperuser`
+5. Start Django server
+   - `python manage.py runserver`
+
+# Uploading payroll file to CSV
+
+1. Browse to `http://127.0.0.1:8000/payroll_loader/`
+2. Click `Upload Payroll CSV`
+3. Click `Browse` and select payroll file to upload
+4. Click `Upload`
+5. If upload completes, you will automatically be taken to the payroll report
+
+
 # Wave Software Development Challenge
 
 Applicants for the [Software
