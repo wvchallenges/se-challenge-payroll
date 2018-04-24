@@ -14,6 +14,9 @@ from payroll_loader.models import (
     Report,
     WorkDay,
 )
+from payroll_loader.utilities import (
+    get_period_start_and_end,
+)
 
 class IndexView(TemplateView):
 
@@ -36,20 +39,14 @@ class CSVUploaderView(TemplateView):
     template_name = 'import.html'
 
     def post(self, request, *args, **kwargs):
+
+        # read csv
         csv_file = request.FILES['csv_file']
         file_data = csv_file.read().decode("utf-8")
         lines = file_data.split("\n")[1:]
         lines = [l for l in lines if l]
 
-        job_group_a, _ = JobGroup.objects.get_or_create(
-            type='A',
-            pay_rate=20,
-        )
-
-        job_group_b, _ = JobGroup.objects.get_or_create(
-            type='B',
-            pay_rate=30,
-        )
+        populate_job_groups()
 
         _, rid, _, _ = tuple(lines.pop().split(','))
 
@@ -85,23 +82,7 @@ class CSVUploaderView(TemplateView):
                 job_group=job_group,
             )
 
-            pay_period_month = date_input.month
-            pay_period_year = date_input.year
-            pay_period_day = date_input.day
-            if pay_period_day >= 1 and pay_period_day < 16:
-                pay_period_start = datetime.datetime.strptime(
-                    f'{pay_period_year}-{pay_period_month}-01', '%Y-%m-%d'
-                )
-                pay_period_end = datetime.datetime.strptime(
-                    f'{pay_period_year}-{pay_period_month}-15', '%Y-%m-%d'
-                )
-            else:
-                pay_period_start = datetime.datetime.strptime(
-                    f'{pay_period_year}-{pay_period_month}-16', '%Y-%m-%d'
-                )
-                pay_period_end = date_input + relativedelta(
-                    day=1, months=+1, days=-1
-                )
+            pay_period_start, pay_period_end = get_period_start_and_end(date_input)
 
             pay_cheque = PayCheque.objects.filter(
                 employee=employee,
