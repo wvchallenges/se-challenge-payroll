@@ -1,7 +1,6 @@
 # Wave Software Development Challenge
 
-Applicants for the [Software
-developer](https://wave.bamboohr.co.uk/jobs/view.php?id=1) role at Wave must
+Applicants for the Full-stack Developer role at Wave must
 complete the following challenge, and submit a solution prior to the onsite
 interview.
 
@@ -195,7 +194,7 @@ off one of your strengths.
 
 ### Documentation:
 
-Please modify `README.md` to add:
+Please delete this `README.md` and create a new one to add:
 
 1. Instructions on how to build/run your application
 1. A paragraph or two about what you are particularly proud of in your
