@@ -196,7 +196,7 @@ off one of your strengths.
 
 Please delete this `README.md` and create a new one to add:
 
-1. Instructions on how to build/run your application
+1. Instructions on how to build and run your application
 1. Answers to the following questions:
    - How did you test that your implementation was correct?
    - If this application was destined for a production environment, what would you add or change?
@@ -215,7 +215,8 @@ Please delete this `README.md` and create a new one to add:
 Evaluation of your submission will be based on the following criteria.
 
 1. Did you follow the instructions for submission?
-1. Did you complete the steps outlined in the _Documentation_ section?
+1. Is it possible to follow build instructions and run your application?
+1. Did you complete the questions outlined in the _Documentation_ section?
 1. Were models/entities and other components easily identifiable to the
    reviewer?
 1. What design decisions did you make when designing your models/entities? Are
