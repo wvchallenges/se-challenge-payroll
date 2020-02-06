@@ -39,15 +39,17 @@ Each individual CSV file is known as a "time report", and will contain:
 1. A header, denoting the columns in the sheet (`date`, `hours worked`,
    `employee id`, `job group`)
 1. 0 or more data rows
-1. A footer row where the first cell contains the string `report id`, and the
-   second cell contains a unique identifier for this report.
+
+In addition, the file name should be of the format `time-report-x.csv`,
+where `x` is the ID of the time report. For example, `time-report-42.csv` would
+represent a report with an ID of `42`.
 
 Our partner has guaranteed that:
 
 1. Columns will always be in that order.
 1. There will always be data in each column.
 1. There will always be a well-formed header line.
-1. There will always be a well-formed footer line.
+1. There will always be a well-formed file name
 
 An example input file named `sample.csv` is included in this repo.
 
@@ -62,7 +64,7 @@ We've agreed to build the following web-based prototype for our partner.
 1. After upload, your application should display a _payroll report_. This
    report should also be accessible to the user without them having to upload a
    file first.
-1. If an attempt is made to upload two files with the same report id, the
+1. If an attempt is made to upload two files with the same report ID, the
    second upload should fail with an error message indicating that this is not
    allowed.
 
