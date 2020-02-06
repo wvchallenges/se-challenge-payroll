@@ -49,7 +49,7 @@ Our partner has guaranteed that:
 1. Columns will always be in that order.
 1. There will always be data in each column.
 1. There will always be a well-formed header line.
-1. There will always be a well-formed file name
+1. There will always be a well-formed file name.
 
 An example input file named `sample.csv` is included in this repo.
 
