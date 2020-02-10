@@ -37,21 +37,20 @@ Each individual CSV file is known as a "time report", and will contain:
 1. 0 or more data rows
 
 In addition, the file name should be of the format `time-report-x.csv`,
-where `x` is the ID of the time report. For example, `time-report-42.csv` would
-represent a report with an ID of `42`.
+where `x` is the ID of the time report represented as an integer. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
 In addition, the file name of the time report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
 You can assume that:
 
 1. Columns will always be in that order.
-1. There will always be data in each column.
+1. There will always be data in each column and the number of hours worked will always be greater than 0.
 1. There will always be a well-formed header line.
 1. There will always be a well-formed file name.
 
 A sample input file named `time-report-42.csv` is included in this repo.
 
-### What your web-based application must do:
+### What your API must do:
 
 We've agreed to build an API with the following endpoints to serve HTTP requests:
 
@@ -183,7 +182,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
    }
    ```
 
-We consider ourselves to be language agnostic here at Wave, so feel free to use whatever tech stack you see fit to meet the requirements and to showcase your skills. We only ask that your submission:
+We consider ourselves to be language agnostic here at Wave, so feel free to use any combination of technologies you see fit to both meet the requirements and showcase your skills. We only ask that your submission:
 
 - Is easy to set up
 - Can run on either a Linux or Mac OS X developer machine
