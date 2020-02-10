@@ -35,14 +35,8 @@ Each individual CSV file is known as a "time report", and will contain:
 1. A header, denoting the columns in the sheet (`date`, `hours worked`,
    `employee id`, `job group`)
 1. 0 or more data rows
-   <<<<<<< Updated upstream
-1. A footer row where the first cell contains the string `report id`, and the
-   second cell contains a unique identifier for this report.
-   =======
 
 In addition, the file name of the tine report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
-
-> > > > > > > Stashed changes
 
 You can assume that:
 
@@ -65,112 +59,126 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
 
 1. An endpoint for retrieving a payroll report structured in the following way:
 
-   _NOTE:_ It is not the responsibility of your API to return html. The expectation is that our API will return the data, which will then be rendered by our front end in the manner described below. The format in which you return the data to the front end is entirely up to you.
+   _NOTE:_ It is not the responsibility of your API to return html, as we will delegate the visual layout and redering to the front end. The expectation is that our API will only return JSON data.
 
-   - There will be 3 columns in the report: `Employee Id`, `Pay Period`,`Amount Paid`
-   - A `Pay Period` is a date interval that is roughly biweekly. Each month has two pay periods; the _first half_ is from the 1st to the 15th inclusive, and the _second half_ is from the 16th to the end of the month, inclusive.
-   - Each employee should have a single row in the report for each pay period that they have recorded hours worked. The `Amount Paid` should be reported as the sum of the hours worked in that pay period multiplied by the hourly rate for their job group.
-   - If an employee was not paid in a specific pay period, there should not be a row for that employee + pay period combination in the report.
+   - Return a JSON object `payrollReport`.
+   - The `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPerdiod`, and `amountPaid`.
+   - The `payPeriod` field is an object containing a date interval that is roughly biweekly. Each month has two pay periods; the _first half_ is from the 1st to the 15th inclusive, and the _second half_ is from the 16th to the end of the month, inclusive. `payPeriod` will have two fields to represent this interval: `startDate` and `endDate`.
+
+   - Each employee should have a single object in `employeeReports` for each pay period that they have recorded hours worked. The `amountPaid` field should contain the sum of the hours worked in that pay period multiplied by the hourly rate for their job group.
+   - If an employee was not paid in a specific pay period, there should not be an object in `employeeReports` for that employee + pay period combination.
    - The report should be sorted in some sensical order (e.g. sorted by employee id and then pay period start.)
-     -The report should be based on all _of the data_ across _all of the uploaded time reports_, for all time.
+   - The report should be based on all _of the data_ across _all of the uploaded time reports_, for all time.
 
-As an example, a sample file with the following data:
+   As an example, given the upload of a sample file with the following data:
 
-<table>
-<tr>
-  <th>
-    date
-  </th>
-  <th>
-    hours worked
-  </th>
-  <th>
-    employee id
-  </th>
-  <th>
-    job group
-  </th>
-</tr>
-<tr>
-  <td>
-    4/11/2016
-  </td>
-  <td>
-    10
-  </td>
-  <td>
-    1
-  </td>
-  <td>
-    A
-  </td>
-</tr>
-<tr>
-  <td>
-    14/11/2016
-  </td>
-  <td>
-    5
-  </td>
-  <td>
-    1
-  </td>
-  <td>
-    A
-  </td>
-</tr>
-<tr>
-  <td>
-    20/11/2016
-  </td>
-  <td>
-    3
-  </td>
-  <td>
-    2
-  </td>
-  <td>
-    B
-  </td>
-</tr>
-</table>
+    <table>
+    <tr>
+      <th>
+        date
+      </th>
+      <th>
+        hours worked
+      </th>
+      <th>
+        employee id
+      </th>
+      <th>
+        job group
+      </th>
+    </tr>
+    <tr>
+      <td>
+        2020-01-04
+      </td>
+      <td>
+        10
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        A
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2020-01-14
+      </td>
+      <td>
+        5
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        A
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2020-01-20
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        B
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2020-01-20
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        A
+      </td>
+    </tr>
+    </table>
 
-should produce the following payroll report:
+   A request to theh report endpoint should return the following JSON response:
 
-<table>
-<tr>
-  <th>
-    Employee ID
-  </th>
-  <th>
-    Pay Period
-  </th>
-  <th>
-    Amount Paid
-  </th>
-</tr>
-<tr>
-  <td>
-    1
-  </td>
-  <td>
-    1/11/2016 - 15/11/2016
-  </td>
-  <td>
-    $300.00
-  </td>
-</tr>
-  <td>
-    2
-  </td>
-  <td>
-    16/11/2016 - 30/11/2016
-  </td>
-  <td>
-    $90.00
-  </td>
-</tr>
-</table>
+   ```javascript
+   {
+     payrollReport: {
+       employeeReports: [
+         {
+           employeeId: 1,
+           payPeriod: {
+             startDate: "2020-01-01",
+             endDate: "2020-01-15"
+           },
+           amountPaid: "$300.00"
+         },
+         {
+           employeeId: 1,
+           payPeriod: {
+             startDate: "2020-01-16",
+             endDate: "2020-01-31"
+           },
+           amountPaid: "$80.00"
+         },
+         {
+           employeeId: 2,
+           payPeriod: {
+             startDate: "2020-01-16",
+             endDate: "2020-01-31"
+           },
+           amountPaid: "$90.00"
+         }
+       ];
+     }
+   }
+   ```
 
 We consider ourselves to be language agnostic here at Wave, so feel free to use whatever tech stack you see fit to meet the requirements and to showcase your skills. We only ask that your submission:
 
@@ -180,7 +188,7 @@ We consider ourselves to be language agnostic here at Wave, so feel free to use 
 
 ### Documentation:
 
-Please delete this `README.md` and create a new one to add:
+Please commit the following to this `README.md`:
 
 1. Instructions on how to build/run your application
 1. Answers to the following questions:
