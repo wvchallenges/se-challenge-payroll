@@ -25,7 +25,7 @@ have any questions.
 Imagine that this is the early days of Wave's history, and that we are prototyping a new payroll system API. A front end (that hasn't been developed yet, but will likely be a single page application) is going to use our API to achieve two goals:
 
 1. Upload a CSV file containing data on the number of hours worked per day per employee
-1. Retriecve data regarding how much each employee should be paid in each _pay period_
+1. Retrieve a report detailing how much each employee should be paid in each _pay period_
 
 All employees are paid by the hour (there are no salaried employees.) Employees belong to one of two _job groups_ which determine their wages; job group A is paid $20/hr, and job group B is paid $30/hr. Each employee is identified by a string called an "employee id" that is globally unique in our system.
 
