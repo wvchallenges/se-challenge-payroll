@@ -36,6 +36,10 @@ Each individual CSV file is known as a "time report", and will contain:
    `employee id`, `job group`)
 1. 0 or more data rows
 
+In addition, the file name should be of the format `time-report-x.csv`,
+where `x` is the ID of the time report. For example, `time-report-42.csv` would
+represent a report with an ID of `42`.
+
 In addition, the file name of the tine report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
 You can assume that:
@@ -43,7 +47,7 @@ You can assume that:
 1. Columns will always be in that order.
 1. There will always be data in each column.
 1. There will always be a well-formed header line.
-1. There will always be a well-formed footer line.
+1. There will always be a well-formed file name.
 
 An example input file named `sample.csv` is included in this repo.
 
