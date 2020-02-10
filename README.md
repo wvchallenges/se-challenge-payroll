@@ -40,7 +40,7 @@ In addition, the file name should be of the format `time-report-x.csv`,
 where `x` is the ID of the time report. For example, `time-report-42.csv` would
 represent a report with an ID of `42`.
 
-In addition, the file name of the tine report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
+In addition, the file name of the time report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
 You can assume that:
 
@@ -49,7 +49,7 @@ You can assume that:
 1. There will always be a well-formed header line.
 1. There will always be a well-formed file name.
 
-An example input file named `sample.csv` is included in this repo.
+A sample input file named `time-report-42.csv` is included in this repo.
 
 ### What your web-based application must do:
 
@@ -63,10 +63,10 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
 
 1. An endpoint for retrieving a payroll report structured in the following way:
 
-   _NOTE:_ It is not the responsibility of your API to return html, as we will delegate the visual layout and redering to the front end. The expectation is that our API will only return JSON data.
+   _NOTE:_ It is not the responsibility of the API to return html, as we will delegate the visual layout and redering to the front end. The expectation is that this API will only return JSON data.
 
    - Return a JSON object `payrollReport`.
-   - The `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPerdiod`, and `amountPaid`.
+   - `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPerdiod`, and `amountPaid`.
    - The `payPeriod` field is an object containing a date interval that is roughly biweekly. Each month has two pay periods; the _first half_ is from the 1st to the 15th inclusive, and the _second half_ is from the 16th to the end of the month, inclusive. `payPeriod` will have two fields to represent this interval: `startDate` and `endDate`.
 
    - Each employee should have a single object in `employeeReports` for each pay period that they have recorded hours worked. The `amountPaid` field should contain the sum of the hours worked in that pay period multiplied by the hourly rate for their job group.
