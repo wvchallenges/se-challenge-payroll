@@ -22,16 +22,12 @@ have any questions.
 
 ## Project Description
 
-Imagine that this is the early days of Wave's history, and that we are prototyping
-a new payroll system with an early partner. Our partner is going to use our web
-app to determine how much each employee should be paid in each _pay period_, so
-it is critical that we get our numbers right.
+Imagine that this is the early days of Wave's history, and that we are prototyping a new payroll system API. A front end (that hasn't been developed yet, but will likely be a single page application) is going to use our API to achieve two goals:
 
-The partner in question only pays its employees by the hour (there are no
-salaried employees.) Employees belong to one of two _job groups_ which
-determine their wages; job group A is paid $20/hr, and job group B is paid
-$30/hr. Each employee is identified by a string called an "employee id" that is
-globally unique in their system.
+1. Upload a CSV file containing data on the number of hours worked per day per employee
+1. Retrieve a report detailing how much each employee should be paid in each _pay period_
+
+All employees are paid by the hour (there are no salaried employees.) Employees belong to one of two _job groups_ which determine their wages; job group A is paid $20/hr, and job group B is paid $30/hr. Each employee is identified by a string called an "employee id" that is globally unique in our system.
 
 Hours are tracked per employee, per day in comma-separated value files (CSV).
 Each individual CSV file is known as a "time report", and will contain:
@@ -41,162 +37,160 @@ Each individual CSV file is known as a "time report", and will contain:
 1. 0 or more data rows
 
 In addition, the file name should be of the format `time-report-x.csv`,
-where `x` is the ID of the time report. For example, `time-report-42.csv` would
-represent a report with an ID of `42`.
+where `x` is the ID of the time report represented as an integer. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
-Our partner has guaranteed that:
+In addition, the file name of the time report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
+
+You can assume that:
 
 1. Columns will always be in that order.
-1. There will always be data in each column.
+1. There will always be data in each column and the number of hours worked will always be greater than 0.
 1. There will always be a well-formed header line.
 1. There will always be a well-formed file name.
 
-An example input file named `sample.csv` is included in this repo.
+A sample input file named `time-report-42.csv` is included in this repo.
 
-### What your web-based application must do:
+### What your API must do:
 
-We've agreed to build the following web-based prototype for our partner.
+We've agreed to build an API with the following endpoints to serve HTTP requests:
 
-1. Your app must accept (via a form) a comma separated file with the schema
-   described in the previous section.
-1. Your app must parse the given file, and store the timekeeping information in
-   a relational database for archival reasons.
-1. After upload, your application should display a _payroll report_. This
-   report should also be accessible to the user without them having to upload a
-   file first.
-1. If an attempt is made to upload two files with the same report ID, the
-   second upload should fail with an error message indicating that this is not
-   allowed.
+1. An endpoint for uploading a file.
 
-The payroll report should be structured as follows:
+   - This file will conform to the CSV specifications outlined in the previous section.
+   - Upon upload, the timekeeping information within the file must be stored to a database for archival purposes.
+   - If an attempt is made to upload a file with the same report ID as a previously uploaded file, this upload should fail with an error message indicating that this is not allowed.
 
-1. There should be 3 columns in the report: `Employee Id`, `Pay Period`,
-   `Amount Paid`
-1. A `Pay Period` is a date interval that is roughly biweekly. Each month has
-   two pay periods; the _first half_ is from the 1st to the 15th inclusive, and
-   the _second half_ is from the 16th to the end of the month, inclusive.
-1. Each employee should have a single row in the report for each pay period
-   that they have recorded hours worked. The `Amount Paid` should be reported
-   as the sum of the hours worked in that pay period multiplied by the hourly
-   rate for their job group.
-1. If an employee was not paid in a specific pay period, there should not be a
-   row for that employee + pay period combination in the report.
-1. The report should be sorted in some sensical order (e.g. sorted by employee
-   id and then pay period start.)
-1. The report should be based on all _of the data_ across _all of the uploaded
-   time reports_, for all time.
+1. An endpoint for retrieving a payroll report structured in the following way:
 
-As an example, a sample file with the following data:
+   _NOTE:_ It is not the responsibility of the API to return html, as we will delegate the visual layout and redering to the front end. The expectation is that this API will only return JSON data.
 
-<table>
-<tr>
-  <th>
-    date
-  </th>
-  <th>
-    hours worked
-  </th>
-  <th>
-    employee id
-  </th>
-  <th>
-    job group
-  </th>
-</tr>
-<tr>
-  <td>
-    4/11/2016
-  </td>
-  <td>
-    10
-  </td>
-  <td>
-    1
-  </td>
-  <td>
-    A
-  </td>
-</tr>
-<tr>
-  <td>
-    14/11/2016
-  </td>
-  <td>
-    5
-  </td>
-  <td>
-    1
-  </td>
-  <td>
-    A
-  </td>
-</tr>
-<tr>
-  <td>
-    20/11/2016
-  </td>
-  <td>
-    3
-  </td>
-  <td>
-    2
-  </td>
-  <td>
-    B
-  </td>
-</tr>
-</table>
+   - Return a JSON object `payrollReport`.
+   - `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPerdiod`, and `amountPaid`.
+   - The `payPeriod` field is an object containing a date interval that is roughly biweekly. Each month has two pay periods; the _first half_ is from the 1st to the 15th inclusive, and the _second half_ is from the 16th to the end of the month, inclusive. `payPeriod` will have two fields to represent this interval: `startDate` and `endDate`.
+   - Each employee should have a single object in `employeeReports` for each pay period that they have recorded hours worked. The `amountPaid` field should contain the sum of the hours worked in that pay period multiplied by the hourly rate for their job group.
+   - If an employee was not paid in a specific pay period, there should not be an object in `employeeReports` for that employee + pay period combination.
+   - The report should be sorted in some sensical order (e.g. sorted by employee id and then pay period start.)
+   - The report should be based on all _of the data_ across _all of the uploaded time reports_, for all time.
 
-should produce the following payroll report:
+   As an example, given the upload of a sample file with the following data:
 
-<table>
-<tr>
-  <th>
-    Employee ID
-  </th>
-  <th>
-    Pay Period
-  </th>
-  <th>
-    Amount Paid
-  </th>
-</tr>
-<tr>
-  <td>
-    1
-  </td>
-  <td>
-    1/11/2016 - 15/11/2016
-  </td>
-  <td>
-    $300.00
-  </td>
-</tr>
-  <td>
-    2
-  </td>
-  <td>
-    16/11/2016 - 30/11/2016
-  </td>
-  <td>
-    $90.00
-  </td>
-</tr>
-</table>
+    <table>
+    <tr>
+      <th>
+        date
+      </th>
+      <th>
+        hours worked
+      </th>
+      <th>
+        employee id
+      </th>
+      <th>
+        job group
+      </th>
+    </tr>
+    <tr>
+      <td>
+        2020-01-04
+      </td>
+      <td>
+        10
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        A
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2020-01-14
+      </td>
+      <td>
+        5
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        A
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2020-01-20
+      </td>
+      <td>
+        3
+      </td>
+      <td>
+        2
+      </td>
+      <td>
+        B
+      </td>
+    </tr>
+    <tr>
+      <td>
+        2020-01-20
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        1
+      </td>
+      <td>
+        A
+      </td>
+    </tr>
+    </table>
 
-Your application should be easy to set up, and should run on either Linux or
-Mac OS X. It should not require any non open-source software.
+   A request to theh report endpoint should return the following JSON response:
 
-There are many ways that this application could be built; we ask that you build
-it in a way that showcases one of your strengths. If you enjoy front-end
-development, do something interesting with the interface. If you like
-object-oriented design, feel free to dive deeper into the domain model of this
-problem. We're happy to tweak the requirements slightly if it helps you show
-off one of your strengths.
+   ```javascript
+   {
+     payrollReport: {
+       employeeReports: [
+         {
+           employeeId: 1,
+           payPeriod: {
+             startDate: "2020-01-01",
+             endDate: "2020-01-15"
+           },
+           amountPaid: "$300.00"
+         },
+         {
+           employeeId: 1,
+           payPeriod: {
+             startDate: "2020-01-16",
+             endDate: "2020-01-31"
+           },
+           amountPaid: "$80.00"
+         },
+         {
+           employeeId: 2,
+           payPeriod: {
+             startDate: "2020-01-16",
+             endDate: "2020-01-31"
+           },
+           amountPaid: "$90.00"
+         }
+       ];
+     }
+   }
+   ```
+
+We consider ourselves to be language agnostic here at Wave, so feel free to use any combination of technologies you see fit to both meet the requirements and showcase your skills. We only ask that your submission:
+
+- Is easy to set up
+- Can run on either a Linux or Mac OS X developer machine
+- Does not require any non open-source software
 
 ### Documentation:
 
-Please delete this `README.md` and create a new one to add:
+Please commit the following to this `README.md`:
 
 1. Instructions on how to build/run your application
 1. Answers to the following questions:
