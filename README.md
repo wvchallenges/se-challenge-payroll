@@ -62,7 +62,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
 
 1. An endpoint for retrieving a payroll report structured in the following way:
 
-   _NOTE:_ It is not the responsibility of the API to return html, as we will delegate the visual layout and redering to the front end. The expectation is that this API will only return JSON data.
+   _NOTE:_ It is not the responsibility of the API to return HTML, as we will delegate the visual layout and redering to the front end. The expectation is that this API will only return JSON data.
 
    - Return a JSON object `payrollReport`.
    - `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPerdiod`, and `amountPaid`.
