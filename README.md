@@ -39,8 +39,6 @@ Each individual CSV file is known as a "time report", and will contain:
 In addition, the file name should be of the format `time-report-x.csv`,
 where `x` is the ID of the time report represented as an integer. For example, `time-report-42.csv` would represent a report with an ID of `42`.
 
-In addition, the file name of the time report should be of the format `time-report-x.csv`, where `x` is the ID of the time report. For example, `time-report-42.csv` would represent a report with an ID of `42`.
-
 You can assume that:
 
 1. Columns will always be in that order.
@@ -147,7 +145,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
     </tr>
     </table>
 
-   A request to theh report endpoint should return the following JSON response:
+   A request to the report endpoint should return the following JSON response:
 
    ```javascript
    {
