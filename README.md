@@ -63,7 +63,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
    _NOTE:_ It is not the responsibility of the API to return HTML, as we will delegate the visual layout and redering to the front end. The expectation is that this API will only return JSON data.
 
    - Return a JSON object `payrollReport`.
-   - `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPerdiod`, and `amountPaid`.
+   - `payrollReport` will have a single field, `employeeReports`, containing a list of objects with fields `employeeId`, `payPeriod`, and `amountPaid`.
    - The `payPeriod` field is an object containing a date interval that is roughly biweekly. Each month has two pay periods; the _first half_ is from the 1st to the 15th inclusive, and the _second half_ is from the 16th to the end of the month, inclusive. `payPeriod` will have two fields to represent this interval: `startDate` and `endDate`.
    - Each employee should have a single object in `employeeReports` for each pay period that they have recorded hours worked. The `amountPaid` field should contain the sum of the hours worked in that pay period multiplied by the hourly rate for their job group.
    - If an employee was not paid in a specific pay period, there should not be an object in `employeeReports` for that employee + pay period combination.
