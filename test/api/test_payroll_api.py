@@ -8,7 +8,6 @@ from src.service.payroll_service import PayrollService
 
 @pytest.fixture(scope="function")
 def client():
-    print("b")
     with app.test_client() as client:
         yield client
 
@@ -49,3 +48,10 @@ def test_return_emp_1_info_when_info_is_present(mock_get_report, client):
     assert "employeeReports" in result.json["payrollReport"]
     assert len(result.json["payrollReport"]["employeeReports"]) == 1, result.json["payrollReport"]
     assert result.json["payrollReport"]["employeeReports"][0] == mock_return
+
+
+def test_fail_payroll_report_upload_when_file_name_is_wrong(client):
+    upload_data = {"invalid_file_name.csv": ""}
+    result = client.post("/payroll", data=upload_data)
+    assert result is not None
+    assert result.status_code == 400, result.data
