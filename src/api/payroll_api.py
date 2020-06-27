@@ -22,7 +22,7 @@ class PayrollApi(Resource):
     def post(self):
         uploaded_files = request.files
         if len(uploaded_files) == 0:
-            return make_response(f"{self.invalid_file_format_message}", 400)
+            return make_response(f"{self.no_uploaded_files_message}", 400)
 
         valid, invalid_names = self._validate_uploaded_file_format([v.filename for k, v in uploaded_files.items()])
         if not valid:

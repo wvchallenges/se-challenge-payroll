@@ -55,3 +55,10 @@ def test_fail_payroll_report_upload_when_file_name_is_wrong(client):
     result = client.post("/payroll", data=upload_data)
     assert result is not None
     assert result.status_code == 400, result.data
+
+
+def test_fail_payroll_report_upload_when_no_file_is_sent(client):
+    upload_data = {}
+    result = client.post("/payroll", data=upload_data)
+    assert result is not None
+    assert result.status_code == 400, result.data
