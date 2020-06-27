@@ -23,4 +23,6 @@ class TestPayrollApi(unittest.TestCase):
             self.assertEqual(result.status_code, 200)
             self.assertTrue(result.json)
             self.assertTrue("payrollReport" in result.json)
-            self.assertTrue(len(result.json["payrollReport"]) == 0, result.json["payrollReport"])
+            self.assertTrue(len(result.json["payrollReport"]) == 1, result.json["payrollReport"])
+            self.assertTrue("employeeReports" in result.json["payrollReport"])
+            self.assertTrue(len(result.json["payrollReport"]["employeeReports"]) == 0, result.json["payrollReport"])
