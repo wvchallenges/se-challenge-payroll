@@ -1,52 +1,51 @@
-import unittest
 from unittest.mock import patch
 
-from flask import Flask
+import pytest
 
-from src.api.payroll_api import PayrollApi
+from src import app
 from src.service.payroll_service import PayrollService
 
 
-class TestPayrollApi(unittest.TestCase):
-    payroll_api = PayrollApi()
+@pytest.fixture(scope="function")
+def client():
+    print("b")
+    with app.test_client() as client:
+        yield client
 
-    def setUp(self) -> None:
-        self.app = Flask(__name__)
 
-    @patch.object(PayrollService, 'get_employee_report')
-    def test_return_empty_when_no_info(self, mock_get_report):
-        mock_get_report.return_value = []
+@patch.object(PayrollService, 'get_employee_report')
+def test_return_empty_when_no_info(mock_get_employee_report, client):
+    mock_get_employee_report.return_value = []
 
-        with self.app.app_context():
-            result = self.payroll_api.get()
-            self.assertIsNotNone(result)
-            self.assertEqual(result.status_code, 200)
-            self.assertTrue(result.json)
-            self.assertTrue("payrollReport" in result.json)
-            self.assertTrue(len(result.json["payrollReport"]) == 1, result.json["payrollReport"])
-            self.assertTrue("employeeReports" in result.json["payrollReport"])
-            self.assertTrue(len(result.json["payrollReport"]["employeeReports"]) == 0, result.json["payrollReport"])
+    result = client.get("/payroll")
+    assert result is not None
+    assert result.status_code == 200, result.status_code
+    assert result.json
+    assert "payrollReport" in result.json
+    assert len(result.json["payrollReport"]) == 1, result.json["payrollReport"]
+    assert "employeeReports" in result.json["payrollReport"]
+    assert len(result.json["payrollReport"]["employeeReports"]) == 0, result.json["payrollReport"]
 
-    @patch.object(PayrollService, 'get_employee_report')
-    def test_return_emp_1_info_when_info_is_present(self, mock_get_report):
-        mock_return = {
-            "employeeId": 1,
-            "payPeriod": {
-                "startDate": "2020-01-01",
-                "endDate": "2020-01-15"
-            },
-            "amountPaid": "$300.00"
-        }
-        mock_get_report.return_value = [mock_return]
 
-        with self.app.app_context():
-            result = self.payroll_api.get()
+@patch.object(PayrollService, 'get_employee_report')
+def test_return_emp_1_info_when_info_is_present(mock_get_report, client):
+    mock_return = {
+        "employeeId": 1,
+        "payPeriod": {
+            "startDate": "2020-01-01",
+            "endDate": "2020-01-15"
+        },
+        "amountPaid": "$300.00"
+    }
+    mock_get_report.return_value = [mock_return]
 
-            self.assertIsNotNone(result)
-            self.assertEqual(result.status_code, 200)
-            self.assertTrue(result.json)
-            self.assertTrue("payrollReport" in result.json)
-            self.assertTrue(len(result.json["payrollReport"]) == 1, result.json["payrollReport"])
-            self.assertTrue("employeeReports" in result.json["payrollReport"])
-            self.assertTrue(len(result.json["payrollReport"]["employeeReports"]) == 1, result.json["payrollReport"])
-            self.assertEqual(result.json["payrollReport"]["employeeReports"][0], mock_return)
+    result = client.get("/payroll")
+
+    assert result is not None
+    assert result.status_code == 200, result.status_code
+    assert result.json
+    assert "payrollReport" in result.json
+    assert len(result.json["payrollReport"]) == 1, result.json["payrollReport"]
+    assert "employeeReports" in result.json["payrollReport"]
+    assert len(result.json["payrollReport"]["employeeReports"]) == 1, result.json["payrollReport"]
+    assert result.json["payrollReport"]["employeeReports"][0] == mock_return
