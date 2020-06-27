@@ -9,7 +9,7 @@ class PayrollApi(Resource):
     payroll_service = inject.instance(PayrollService)
 
     def get(self):
-        full_report = {"employeeReports": self.payroll_service.get_report()}
+        full_report = {"employeeReports": self.payroll_service.get_employee_report()}
         return jsonify(payrollReport=full_report)
 
     def post(self):

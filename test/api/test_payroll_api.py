@@ -13,7 +13,7 @@ class TestPayrollApi(unittest.TestCase):
     def setUp(self) -> None:
         self.app = Flask(__name__)
 
-    @patch.object(PayrollService, 'get_report')
+    @patch.object(PayrollService, 'get_employee_report')
     def test_return_empty_when_no_info(self, mock_get_report):
         mock_get_report.return_value = []
 
@@ -27,7 +27,7 @@ class TestPayrollApi(unittest.TestCase):
             self.assertTrue("employeeReports" in result.json["payrollReport"])
             self.assertTrue(len(result.json["payrollReport"]["employeeReports"]) == 0, result.json["payrollReport"])
 
-    @patch.object(PayrollService, 'get_report')
+    @patch.object(PayrollService, 'get_employee_report')
     def test_return_emp_1_info_when_info_is_present(self, mock_get_report):
         mock_return = {
             "employeeId": 1,

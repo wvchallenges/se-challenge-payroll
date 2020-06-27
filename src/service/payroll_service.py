@@ -1,3 +1,3 @@
 class PayrollService:
-    def get_report(self):
+    def get_employee_report(self):
         return []
