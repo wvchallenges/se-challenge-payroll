@@ -62,3 +62,7 @@ def test_fail_payroll_report_upload_when_no_file_is_sent(client):
     result = client.post("/payroll", data=upload_data)
     assert result is not None
     assert result.status_code == 400, result.data
+
+
+# todo add test for file with headers only
+# todo add test for file with at least one report row

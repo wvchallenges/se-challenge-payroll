@@ -1,4 +1,6 @@
+import csv
 import re
+from io import StringIO
 from typing import List
 
 import inject
@@ -26,7 +28,11 @@ class PayrollApi(Resource):
 
         valid, invalid_names = self._validate_uploaded_file_format([v.filename for k, v in uploaded_files.items()])
         if not valid:
-            return make_response(f"{self.invalid_file_format_message}", 400)
+            return make_response(f"{self.invalid_file_format_message}: {invalid_names}", 400)
+
+        for k, v in uploaded_files.items():
+            reader = csv.reader(StringIO(v.read().decode("utf-8")))
+            self.payroll_service.add_time_report(reader[0], [row for row in reader[1:]])
 
     def _validate_uploaded_file_format(self, file_names: List[str]):
         print(file_names)
