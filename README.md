@@ -58,7 +58,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
    - Upon upload, the timekeeping information within the file must be stored to a database for archival purposes.
    - If an attempt is made to upload a file with the same report ID as a previously uploaded file, this upload should fail with an error message indicating that this is not allowed.
 
-1. An endpoint for retrieving a payroll report structured in the following way:
+2. An endpoint for retrieving a payroll report structured in the following way:
 
    _NOTE:_ It is not the responsibility of the API to return HTML, as we will delegate the visual layout and redering to the front end. The expectation is that this API will only return JSON data.
 
@@ -70,82 +70,16 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
    - The report should be sorted in some sensical order (e.g. sorted by employee id and then pay period start.)
    - The report should be based on all _of the data_ across _all of the uploaded time reports_, for all time.
 
-   As an example, given the upload of a sample file with the following data:
+As an example, given the upload of a sample file with the following data:
 
-    <table>
-    <tr>
-      <th>
-        date
-      </th>
-      <th>
-        hours worked
-      </th>
-      <th>
-        employee id
-      </th>
-      <th>
-        job group
-      </th>
-    </tr>
-    <tr>
-      <td>
-        2020-01-04
-      </td>
-      <td>
-        10
-      </td>
-      <td>
-        1
-      </td>
-      <td>
-        A
-      </td>
-    </tr>
-    <tr>
-      <td>
-        2020-01-14
-      </td>
-      <td>
-        5
-      </td>
-      <td>
-        1
-      </td>
-      <td>
-        A
-      </td>
-    </tr>
-    <tr>
-      <td>
-        2020-01-20
-      </td>
-      <td>
-        3
-      </td>
-      <td>
-        2
-      </td>
-      <td>
-        B
-      </td>
-    </tr>
-    <tr>
-      <td>
-        2020-01-20
-      </td>
-      <td>
-        4
-      </td>
-      <td>
-        1
-      </td>
-      <td>
-        A
-      </td>
-    </tr>
-    </table>
+   | date       | hours worked | employee id | job group |
+   | ---------- | ------------ | ----------- | --------- |
+   | 2020-01-04 | 10           | 1           | A         |
+   | 2020-01-14 | 5            | 1           | A         |
+   | 2020-01-20 | 3            | 2           | B         |
+   | 2020-01-20 | 4            | 1           | A         |
 
-   A request to the report endpoint should return the following JSON response:
+A request to the report endpoint should return the following JSON response:
 
    ```json
    {
