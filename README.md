@@ -152,7 +152,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
      payrollReport: {
        employeeReports: [
          {
-           employeeId: 1,
+           employeeId: "1",
            payPeriod: {
              startDate: "2020-01-01",
              endDate: "2020-01-15"
@@ -160,7 +160,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
            amountPaid: "$300.00"
          },
          {
-           employeeId: 1,
+           employeeId: "1",
            payPeriod: {
              startDate: "2020-01-16",
              endDate: "2020-01-31"
@@ -168,7 +168,7 @@ We've agreed to build an API with the following endpoints to serve HTTP requests
            amountPaid: "$80.00"
          },
          {
-           employeeId: 2,
+           employeeId: "2",
            payPeriod: {
              startDate: "2020-01-16",
              endDate: "2020-01-31"
