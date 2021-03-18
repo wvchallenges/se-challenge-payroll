@@ -7,6 +7,7 @@ import os
 def main():
   con = db.initialize_db('example.db')
   read_csv('time-report-42.csv', con)
+  generate_report(con)
 
 def read_csv(csv_file, con):
   report_num = re.findall(r"time-report-(\d+)\.csv",csv_file)[0]
@@ -19,6 +20,11 @@ def read_csv(csv_file, con):
       else:
         db.insert_csv_row(con, row, report_num)
       line_count += 1
+
+def generate_report(con):
+  rows = db.get_records_sorted(con)
+  print(rows)
+
 
 if __name__ == "__main__":
   os.remove('example.db')

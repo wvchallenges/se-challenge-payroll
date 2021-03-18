@@ -44,7 +44,7 @@ def initialize_db(filename):
     cur.close()
     return con
   except Exception as e:
-    exception_handler(con, e, "Cannot continue")
+    exception_handler(con, e, "Cannot continue since db init failed")
     exit(1)
 
 def insert_employee_check(con, emp_id):
@@ -77,7 +77,7 @@ def insert_csv_row(con, row, report_num):
 
   # convert dd/mm/yyyy into datetime
   try:
-    log_date = time.mktime(datetime.datetime.strptime(date, '%d/%m/%Y').timetuple())
+    log_date = time.mktime(datetime.datetime.strptime(date.replace("/0", "/"), '%d/%m/%Y').timetuple())
   except Exception as e:
     # time.mktime(dt.timetuple())
     print(f"Unable to convert date {date} to datetime: {e}")
@@ -95,8 +95,19 @@ def insert_csv_row(con, row, report_num):
   except Exception as e:
     exception_handler(con, e, "Skipping row")
 
-
-
+def get_records_sorted(con):
+  cur = con.cursor()
+  try:
+    cur.execute('''SELECT employee_id as employeeId, log_date, (hours * rate) AS amountPaid FROM EMPLOYEE_LOGS INNER JOIN JOBS WHERE EMPLOYEE_LOGS.job_name = JOBS.name ORDER BY employee_id ASC, log_date ASC''')
+    rows = cur.fetchall()
+    cur.close()
+    return rows
+  except Exception as e:
+    exception_handler(con, e, "Cannot continue since report generation failed on db")
+'''
+/*SELECT employee_id, log_date, hours, job_name FROM EMPLOYEE_LOGS ORDER BY employee_id ASC, log_date ASC*/
+SELECT employee_id as employeeId, log_date, (hours * rate) AS amountPaid FROM EMPLOYEE_LOGS INNER JOIN JOBS WHERE EMPLOYEE_LOGS.job_name = JOBS.name ORDER BY employee_id ASC, log_date ASC
+'''
 
 
 
