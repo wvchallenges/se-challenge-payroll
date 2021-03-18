@@ -10,10 +10,13 @@ import json
 def main():
   con = db.initialize_db('example.db')
   read_csv('time-report-42.csv', con)
-  generate_report(con)
+  # generate_report(con)
 
 def read_csv(csv_file, con):
   report_num = re.findall(r"time-report-(\d+)\.csv",csv_file)[0]
+  if db.exists_report(con, report_num):
+    print(f"Report num {report_num} exists. Not doing anything")
+    return
   with open(csv_file) as f:
     line_count = 0
     for row in f:
@@ -76,5 +79,5 @@ def calculatePeriod(timestamp, emp_id, employeeReports):
   return dates
 
 if __name__ == "__main__":
-  os.remove('example.db')
+  # os.remove('example.db')
   main()

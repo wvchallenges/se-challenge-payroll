@@ -25,8 +25,8 @@ def initialize_db(filename):
     rate INTEGER NOT NULL
     )''')
 
-    cur.execute('''INSERT INTO JOBS (name, rate) VALUES (?,?)''', ('A', 20,))
-    cur.execute('''INSERT INTO JOBS (name, rate) VALUES (?,?)''', ('B', 30,))
+    # cur.execute('''INSERT INTO JOBS (name, rate) VALUES (?,?)''', ('A', 20,))
+    # cur.execute('''INSERT INTO JOBS (name, rate) VALUES (?,?)''', ('B', 30,))
 
     cur.execute('''CREATE TABLE IF NOT EXISTS EMPLOYEE_LOGS (
     employee_id INTEGER NOT NULL,
@@ -102,10 +102,18 @@ def get_records_sorted(con):
     return rows
   except Exception as e:
     exception_handler(con, e, "Cannot continue since report generation failed on db")
-'''
-/*SELECT employee_id, log_date, hours, job_name FROM EMPLOYEE_LOGS ORDER BY employee_id ASC, log_date ASC*/
-SELECT employee_id as employeeId, log_date, (hours * rate) AS amountPaid FROM EMPLOYEE_LOGS INNER JOIN JOBS WHERE EMPLOYEE_LOGS.job_name = JOBS.name ORDER BY employee_id ASC, log_date ASC
-'''
+
+def exists_report(con, report_num):
+  cur = con.cursor()
+  try:
+    cur.execute('''SELECT report_num FROM EMPLOYEE_LOGS WHERE report_num=? LIMIT 1''', (report_num,))
+    rows = cur.fetchall()
+    cur.close()
+    if not rows:
+      return False
+    return True
+  except Exception as e:
+    exception_handler(con, e, "Cannot continue since checking if report num exists failed on db")
 
 
 
