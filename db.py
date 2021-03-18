@@ -31,7 +31,7 @@ def initialize_db(filename):
     cur.execute('''CREATE TABLE IF NOT EXISTS EMPLOYEE_LOGS (
     employee_id INTEGER NOT NULL,
     log_date DATE NOT NULL,
-    hours INTEGER NOT NULL,
+    hours REAL NOT NULL,
     job_name TEXT NOT NULL,
     report_num TEXT NOT NULL,
     FOREIGN KEY (employee_id)
@@ -63,9 +63,7 @@ def insert_job_check(con, job):
 
   return True
 
-def insert_csv_row(con, row, report_num):
-  date, hours, emp_id, job = row['date'], row['hours worked'], \
-                             row['employee id'], row['job group']
+def insert_csv_row(con, date, hours, emp_id, job, report_num):
 
   # make sure employee exists in the EMPLOYEE table, if not, insert
   insert_employee_check(con, emp_id)
