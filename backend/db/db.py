@@ -18,6 +18,7 @@ def initialize_db():
 
     # create tables
     cur.execute('''CREATE TABLE ADMINS (
+    id TEXT,
     username TEXT PRIMARY KEY,
     password TEXT
     )''')

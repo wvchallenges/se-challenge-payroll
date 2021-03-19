@@ -3,7 +3,7 @@ from datetime import datetime
 from db import db_helpers
 import time
 from werkzeug.security import check_password_hash
-
+import uuid
 
 
 def insert_employee_check(con, emp_id):
@@ -88,7 +88,8 @@ def exists_report(con, report_num):
 def create_user(con, username, password):
   cur = con.cursor()
   try:
-    cur.execute('''INSERT INTO ADMINS (username, password) VALUES (?,?)''', (username, password))
+    id = str(uuid.uuid4())
+    cur.execute('''INSERT INTO ADMINS (id, username, password) VALUES (?,?,?)''', (id, username, password))
     con.commit()
     print('Inserted user')
     cur.close()
@@ -99,7 +100,7 @@ def create_user(con, username, password):
 def check_user(con, username, password):
   cur = con.cursor()
   try:
-    cur.execute('''SELECT username, password FROM ADMINS WHERE username=?''', (username,))
+    cur.execute('''SELECT id, password FROM ADMINS WHERE username=?''', (username,))
     rows = cur.fetchall()
     print(rows)
     cur.close()
@@ -107,6 +108,6 @@ def check_user(con, username, password):
       return False
     if not check_password_hash(rows[0][1], password):
       return False
-    return True
+    return rows[0][0]
   except Exception as e:
     db_helpers.exception_handler(con, e, f"Unable to check for user in database")

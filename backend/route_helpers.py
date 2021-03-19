@@ -55,7 +55,6 @@ def generate_report(con):
     else:
       report["payPeriod"] = payPeriod
       report["amountPaid"] = amountPaid
-      print(report)
       employeeReports[key] = report
 
   employeeReportsList = [employeeReports[key] for key in employeeReports]
@@ -95,9 +94,10 @@ def create_login(con, username, password):
 
 def check_login(con, username, password):
   try:
-    if not db_crud.check_user(con, username, password):
-      return 401, "User does not exist or password is incorrect"
-    return 200, f"Successfully logged in for user {username}"
+    id = db_crud.check_user(con, username, password)
+    if not id:
+      return 401, "User does not exist or password is incorrect", -1
+    return 200, f"Successfully logged in for user {username}", id
   except Exception as e:
-    return 500, e.args[0]
+    return 500, e.args[0], -1
 
