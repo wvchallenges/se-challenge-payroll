@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, request, jsonify, make_response
+from werkzeug.security import generate_password_hash
 from db import db_helpers
 import route_helpers
 import jwt
@@ -15,10 +15,10 @@ def token_required(f):
   @wraps(f)
   def decorated(*args, **kwargs):
     token = None
-    if 'x-access-token' in request.headers:
-      token = request.headers['x-access-token']
+    if 'token' in request.cookies:
+      token = request.cookies['token']
     if not token:
-      return jsonify({"message": "Missing token in x-access-token header"}), 401
+      return jsonify({"message": "Missing token in cookies"}), 401
 
     try:
       jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
@@ -58,8 +58,12 @@ def login():
   status, msg, id = route_helpers.check_login(con, auth.username, auth.password)
   if status == 200:
     token = jwt.encode({'user': id}, app.config['SECRET_KEY'], algorithm="HS256")
-    return jsonify({'token': token})
+    resp = make_response(jsonify({'token': token}), 200)
+    resp.set_cookie('token', token, httponly=True)
+    return resp
   return jsonify({"message": msg}), status
+
+
 
 
 @app.after_request
@@ -67,4 +71,5 @@ def after_request(response):
   header = response.headers
   header['Access-Control-Allow-Origin'] = 'http://localhost:3000'
   header['Access-Control-Allow-Headers'] = 'Authorization,Content-Type'
+  header['Access-Control-Allow-Credentials'] = 'true'
   return response

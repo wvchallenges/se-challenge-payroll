@@ -72,7 +72,8 @@ class Login extends Component {
       auth: {
         username: this.state.username,
         password: this.state.password
-      }
+      },
+      withCredentials: true
     })
     .then(res => {
       this.setState(
