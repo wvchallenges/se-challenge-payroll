@@ -11,11 +11,17 @@ def initialize_db():
     cur = con.cursor()
 
     # drop tables
+    cur.execute('''DROP TABLE IF EXISTS ADMINS''')
     cur.execute('''DROP TABLE IF EXISTS EMPLOYEES''')
     cur.execute('''DROP TABLE IF EXISTS JOBS''')
     cur.execute('''DROP TABLE IF EXISTS EMPLOYEE_LOGS''')
 
     # create tables
+    cur.execute('''CREATE TABLE ADMINS (
+    username TEXT PRIMARY KEY,
+    password TEXT
+    )''')
+
     cur.execute('''CREATE TABLE EMPLOYEES (
     id INTEGER PRIMARY KEY
     )''')

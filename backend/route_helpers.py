@@ -85,3 +85,10 @@ def calculatePeriod(timestamp):
   dates["startDate"] = startDate
   dates["endDate"] = endDate
   return dates
+
+def create_login(con, username, password):
+  try:
+    rows = db_crud.create_user(con, username, password)
+    return 200, f"Successfully created user {username}"
+  except Exception as e:
+    return 500, e.args[0]

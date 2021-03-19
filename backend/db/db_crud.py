@@ -82,3 +82,14 @@ def exists_report(con, report_num):
   except Exception as e:
     db_helpers.exception_handler(con, e,
                                  "Cannot continue since checking if report num exists failed on db")
+
+def create_user(con, username, password):
+  cur = con.cursor()
+  try:
+    cur.execute('''INSERT INTO ADMINS (username, password) VALUES (?,?)''', (username, password))
+    con.commit()
+    print('Inserted user')
+    cur.close()
+    return con
+  except Exception as e:
+    db_helpers.exception_handler(con, e, f"Unable to create user {username}")
