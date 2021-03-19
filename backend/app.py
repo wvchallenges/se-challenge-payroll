@@ -30,6 +30,14 @@ def create_user():
   status, msg = route_helpers.create_login(con, data['username'], hashed_pwd)
   return jsonify({"message": msg}), status
 
+@app.route('/login', methods=['POST'])
+def login():
+  auth = request.get_json()
+  if 'password' not in auth or 'username' not in auth:
+    return jsonify({"message": "Please make sure both fields are entered"}), 401
+  status, msg = route_helpers.check_login(con, auth['username'], auth['password'])
+  return jsonify({"message": msg}), status
+
 
 @app.after_request
 def after_request(response):

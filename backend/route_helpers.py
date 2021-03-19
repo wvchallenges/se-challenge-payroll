@@ -92,3 +92,12 @@ def create_login(con, username, password):
     return 200, f"Successfully created user {username}"
   except Exception as e:
     return 500, e.args[0]
+
+def check_login(con, username, password):
+  try:
+    if not db_crud.check_user(con, username, password):
+      return 401, "User does not exist or password is incorrect"
+    return 200, f"Successfully logged in for user {username}"
+  except Exception as e:
+    return 500, e.args[0]
+
