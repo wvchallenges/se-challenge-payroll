@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import TableRow from "../TableRow/TableRow";
 import {v4 as uuidv4} from 'uuid'
 
 class Table extends Component {
@@ -18,15 +19,8 @@ class Table extends Component {
 
             <tbody style={{"textAlign": "center"}}>
             {
-              this.props.report["payrollReport"]["employeeReports"].map(rep => {
-                return (
-                    <tr key={uuidv4()}>
-                      <th scope="row">{rep["employeeId"]}</th>
-                      <td>{rep["payPeriod"]["startDate"]}</td>
-                      <td>{rep["payPeriod"]["endDate"]}</td>
-                      <td>{rep["amountPaid"]}</td>
-                    </tr>
-                )
+              this.props.report["payrollReport"]["employeeReports"].map(row => {
+                return <TableRow row={row} key={uuidv4()}/>
               })
             }
             </tbody>

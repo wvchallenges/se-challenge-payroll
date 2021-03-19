@@ -4,7 +4,6 @@ import Table from "../Table/Table";
 import * as Constants from '../../constants'
 
 const FormData = require('form-data');
-const fs = require('fs')
 
 class Home extends Component {
 
@@ -18,6 +17,21 @@ class Home extends Component {
       successMsg: null,
       interMsg: null,
       actionStart: false
+    }
+  }
+
+  errorHandler = (err, url) => {
+    this.setState({interMsg: "", actionStart: false})
+    if (err.response?.status == 404) {
+      console.error(err.response.data)
+      this.setState({errorMsg: `Could not find URL: ${url}`})
+    }
+    if (err.response?.data) {
+      console.log(`err occured: ${err.response.data.message}`)
+      this.setState({errorMsg: err.response.data.message})
+    } else {
+      console.log(`other type of err ${err}`)
+      this.setState({errorMsg: `${err}`})
     }
   }
 
@@ -48,21 +62,7 @@ class Home extends Component {
       this.getReport()
     })
     .catch(err => {
-      if (err.response?.status == 404) {
-        console.error(err.response.data)
-        this.setState({errorMsg: `Could not find URL: ${url}`, interMsg: "", actionStart: false})
-      }
-      if (err.response?.data) {
-        console.log(`err occured: ${err.response.data.message}`)
-        this.setState({
-          errorMsg: err.response.data.message,
-          interMsg: "",
-          actionStart: false
-        })
-      } else {
-        console.log(`other type of err ${err}`)
-        this.setState({errorMsg: `${err}`, interMsg: "", actionStart: false})
-      }
+      this.errorHandler(err, url)
     })
   }
 
@@ -75,21 +75,7 @@ class Home extends Component {
           {report: res.data, toggled: "Hide", interMsg: "", actionStart: false})
     })
     .catch(err => {
-      if (err.response?.status == 404) {
-        console.error(err.response.data)
-        this.setState({errorMsg: `Could not find URL: ${url}`, interMsg: "", actionStart: false})
-      }
-      if (err.response?.data) {
-        console.log(`err occured: ${err.response.data.message}`)
-        this.setState({
-          successMsg: err.response.data.message,
-          interMsg: "",
-          actionStart: false
-        })
-      } else {
-        console.log(`other type of err ${err}`)
-        this.setState({errorMsg: `${err}`, interMsg: "", actionStart: false})
-      }
+      this.errorHandler(err, url)
     })
   }
 
