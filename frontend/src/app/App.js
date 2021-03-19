@@ -8,6 +8,7 @@ class App extends Component {
         <div>
           <Navbar/>
           <Home/>
+          
 
 
         </div>

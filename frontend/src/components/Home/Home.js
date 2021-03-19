@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from "axios";
+import Table from "../Table/Table";
 const FormData = require('form-data');
 const fs = require('fs')
 
@@ -11,8 +12,9 @@ class Home extends Component {
     this.state = {
       selectedFile: null,
       uploadedFile: null,
-      message: null
-
+      message: null,
+      report: null,
+      toggled: "Show"
     }
   }
 
@@ -35,10 +37,33 @@ class Home extends Component {
       }
     }).then(res => {
       this.setState({ uploadedFile: true, message: res.data.message })
+      this.getReport()
     })
     .catch(err => {
       this.setState({ uploadedFile: false, message: err.response.data.message })
     })
+  }
+
+  getReport = () => {
+    axios.get('http://127.0.0.1:5000/report')
+    .then(res => {
+      this.setState({report: res.data, toggled: "Hide"})
+      // this.setState({ uploadedFile: true, message: res.data.message })
+    })
+    .catch(err => {
+      console.error(err)
+      // this.setState({ uploadedFile: false, message: err.response.data.message })
+    })
+  }
+
+  onClickToggleHandler = (e) => {
+    console.log("in on toggle")
+    if (this.state.toggled == "Hide") {
+      this.setState({toggled: "Show"})
+      return
+    }
+    this.getReport()
+
   }
 
   renderAlert() {
@@ -74,6 +99,10 @@ class Home extends Component {
           </form>
           <br/>
           {this.renderAlert()}
+          <button className="btn btn-secondary" onClick={this.onClickToggleHandler}>{this.state.toggled} Report</button>
+          {
+            this.state.report && this.state.toggled == "Hide" ? <Table report={this.state.report}/> : null
+          }
 
 
 
