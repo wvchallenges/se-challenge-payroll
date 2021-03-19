@@ -21,7 +21,6 @@ def token_required(f):
       return jsonify({"message": "Missing token in x-access-token header"}), 401
 
     try:
-      print(token)
       jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
     except:
       return jsonify({"message": "Token is invalid"}), 401
@@ -42,7 +41,7 @@ def get_report():
   status, report = route_helpers.generate_report(con)
   return jsonify(report), status
 
-@app.route('/user', methods=['POST'])
+@app.route('/signup', methods=['POST'])
 def create_user():
   data = request.get_json()
   if 'password' not in data or 'username' not in data:
@@ -67,4 +66,5 @@ def login():
 def after_request(response):
   header = response.headers
   header['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+  header['Access-Control-Allow-Headers'] = 'Authorization,Content-Type'
   return response

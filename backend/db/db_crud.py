@@ -95,7 +95,7 @@ def create_user(con, username, password):
     cur.close()
     return con
   except Exception as e:
-    db_helpers.exception_handler(con, e, f"Unable to create user {username}")
+    db_helpers.exception_handler(con, None, f"Unable to create user {username}. Most likely already exists")
 
 def check_user(con, username, password):
   cur = con.cursor()
