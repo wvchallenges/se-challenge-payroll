@@ -16,7 +16,9 @@ class Home extends Component {
       report: null,
       toggled: "Show",
       errorMsg: null,
-      successMsg: null
+      successMsg: null,
+      interMsg: null,
+      actionStart: false
     }
   }
 
@@ -28,44 +30,49 @@ class Home extends Component {
   onSubmitHandler = (e) => {
     console.log("in submit")
     e.preventDefault()
+    e.target.value = null;
     if (!this.state.selectedFile) return;
-    this.setState({successMsg: "", errorMsg: ""})
-
-
     const formData = new FormData()
+
+
     formData.append("file", this.state.selectedFile)
+    this.onClickClearHandler()
+    this.setState({interMsg: "Attempting to upload...", actionStart: true})
+
     axios.post('http://127.0.0.1:5000/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     }).then(res => {
-      this.setState({ successMsg: res.data.message })
+      this.setState({ successMsg: res.data.message, interMsg: "", actionStart: false})
       this.getReport()
     })
     .catch(err => {
       if (err.response?.data) {
         console.log(`err occured: ${err.response.data.message}`)
-        this.setState({ errorMsg: err.response.data.message})
+        this.setState({ errorMsg: err.response.data.message, interMsg: "", actionStart: false})
       } else {
         console.log(`other type of err ${err}`)
-        this.setState({ errorMsg: `${err}` })
+        this.setState({ errorMsg: `${err}`, interMsg: "", actionStart: false})
       }
     })
   }
 
   getReport = () => {
+    // this.onClickClearHandler()
+    this.setState({interMsg: "Fetching report...", actionStart: true})
     axios.get('http://127.0.0.1:5000/report')
     .then(res => {
-      this.setState({report: res.data, toggled: "Hide"})
+      this.setState({report: res.data, toggled: "Hide", interMsg: "", actionStart: false})
       // this.setState({ uploadedFile: true, message: res.data.message })
     })
     .catch(err => {
       console.log(`err is ${err}`)
       if (err.response?.data) {
-        this.setState({ successMsg: err.response.data.message})
+        this.setState({ successMsg: err.response.data.message, interMsg: "", actionStart: false})
       } else {
         console.log(`other type of err ${err}`)
-        this.setState({ errorMsg: `${err}` })
+        this.setState({ errorMsg: `${err}`, interMsg: "", actionStart: false})
       }
     })
   }
@@ -96,13 +103,22 @@ class Home extends Component {
           </div>
       ))
     }
+    if (this.state.interMsg) {
+      result.push((
+          <div className="d-flex justify-content-center">
+            <div className="spinner-border" role="status">
+              <span className="sr-only"></span>
+            </div>
+          </div>
+      ))
+    }
     return (
         <div>{result}</div>
     )
   }
 
   onClickClearHandler = () => {
-    this.setState({successMsg: "", errorMsg: ""})
+    this.setState({successMsg: "", errorMsg: "", interMsg: ""})
   }
 
   render() {
@@ -114,7 +130,7 @@ class Home extends Component {
             <div className="input-group">
               <input className="form-control" id="formFileLg"
                      type="file" onChange={this.onChangeHandler}/>
-              <button className="btn btn-primary" type="submit" onClick={this.onSubmitHandler}>Upload
+              <button className="btn btn-primary" type="submit" onClick={this.onSubmitHandler} disabled={this.state.actionStart}>Upload
               </button>
             </div>
           </form>
@@ -122,9 +138,9 @@ class Home extends Component {
           {this.renderAlert()}
           <div className="row" style={{"justifyContent":"center"}}>
 
-            <button className="btn btn-secondary" style={{"width":"25%"}} onClick={this.onClickToggleHandler}>{this.state.toggled} Report</button>
+            <button className="btn btn-secondary" style={{"width":"25%"}} onClick={this.onClickToggleHandler} disabled={this.state.actionStart}>{this.state.toggled} Report</button>
 
-            <button className="btn btn-warning" style={{"width":"25%", "marginLeft":"2%"}} onClick={this.onClickClearHandler}>Clear Messages</button>
+            <button className="btn btn-warning" style={{"width":"25%", "marginLeft":"2%"}} onClick={this.onClickClearHandler} disabled={this.state.actionStart}>Clear Messages</button>
           </div>
 
 
