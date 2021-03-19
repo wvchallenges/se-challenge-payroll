@@ -14,7 +14,9 @@ class Home extends Component {
       uploadedFile: null,
       message: null,
       report: null,
-      toggled: "Show"
+      toggled: "Show",
+      errorMsg: null,
+      successMsg: null
     }
   }
 
@@ -27,6 +29,7 @@ class Home extends Component {
     console.log("in submit")
     e.preventDefault()
     if (!this.state.selectedFile) return;
+    this.setState({successMsg: "", errorMsg: ""})
 
 
     const formData = new FormData()
@@ -36,11 +39,17 @@ class Home extends Component {
         'Content-Type': 'multipart/form-data'
       }
     }).then(res => {
-      this.setState({ uploadedFile: true, message: res.data.message })
+      this.setState({ successMsg: res.data.message })
       this.getReport()
     })
     .catch(err => {
-      this.setState({ uploadedFile: false, message: err.response.data.message })
+      if (err.response?.data) {
+        console.log(`err occured: ${err.response.data.message}`)
+        this.setState({ errorMsg: err.response.data.message})
+      } else {
+        console.log(`other type of err ${err}`)
+        this.setState({ errorMsg: `${err}` })
+      }
     })
   }
 
@@ -51,8 +60,13 @@ class Home extends Component {
       // this.setState({ uploadedFile: true, message: res.data.message })
     })
     .catch(err => {
-      console.error(err)
-      // this.setState({ uploadedFile: false, message: err.response.data.message })
+      console.log(`err is ${err}`)
+      if (err.response?.data) {
+        this.setState({ successMsg: err.response.data.message})
+      } else {
+        console.log(`other type of err ${err}`)
+        this.setState({ errorMsg: `${err}` })
+      }
     })
   }
 
@@ -67,21 +81,28 @@ class Home extends Component {
   }
 
   renderAlert() {
-    if (this.state.uploadedFile !== null) {
-      if (this.state.uploadedFile) {
-        return (
-            <div className="alert alert-success" role="alert">
-              {this.state.message}
-            </div>
-        )
-      } else {
-        return (
-            <div className="alert alert-danger" role="alert">
-              {this.state.message}
-            </div>
-        )
-      }
+    const result = [];
+    if (this.state.successMsg) {
+      result.push((
+          <div className="alert alert-success" role="alert">
+            {this.state.successMsg}
+          </div>
+      ))
     }
+    if (this.state.errorMsg) {
+      result.push((
+          <div className="alert alert-danger" role="alert">
+            {this.state.errorMsg}
+          </div>
+      ))
+    }
+    return (
+        <div>{result}</div>
+    )
+  }
+
+  onClickClearHandler = () => {
+    this.setState({successMsg: "", errorMsg: ""})
   }
 
   render() {
@@ -99,10 +120,18 @@ class Home extends Component {
           </form>
           <br/>
           {this.renderAlert()}
-          <button className="btn btn-secondary" onClick={this.onClickToggleHandler}>{this.state.toggled} Report</button>
+          <div className="row" style={{"justifyContent":"center"}}>
+
+            <button className="btn btn-secondary" style={{"width":"25%"}} onClick={this.onClickToggleHandler}>{this.state.toggled} Report</button>
+
+            <button className="btn btn-warning" style={{"width":"25%", "marginLeft":"2%"}} onClick={this.onClickClearHandler}>Clear Messages</button>
+          </div>
+
+
           {
             this.state.report && this.state.toggled == "Hide" ? <Table report={this.state.report}/> : null
           }
+
 
 
 

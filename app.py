@@ -39,8 +39,12 @@ def main():
 def read_csv(file_handler, con):
 
   filename = file_handler.filename
-  report_num = re.findall(r"time-report-(\d+)\.csv",filename)[0]
+  report_num = re.findall(r"time-report-(\d+)\.csv",filename)
 
+  if not report_num:
+    return 500, f"Either {filename} is not a csv, or it does not follow naming convention"
+
+  report_num = report_num[0]
   if db.exists_report(con, report_num):
     return 409, f"Report num {report_num} exists. Not doing anything"
 
