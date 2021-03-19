@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import axios from "axios";
 import Table from "../Table/Table";
+import * as Constants from '../../constants'
+
 const FormData = require('form-data');
 const fs = require('fs')
-
 
 class Home extends Component {
 
@@ -11,8 +12,6 @@ class Home extends Component {
     super();
     this.state = {
       selectedFile: null,
-      uploadedFile: null,
-      message: null,
       report: null,
       toggled: "Show",
       errorMsg: null,
@@ -22,69 +21,84 @@ class Home extends Component {
     }
   }
 
-  onChangeHandler = (e) => {
-    this.setState({ selectedFile: e.target.files[0]})
-    console.log(e.target.files[0])
+  onChangeFileHandler = (e) => {
+    this.setState({selectedFile: e.target.files[0]})
   }
 
-  onSubmitHandler = (e) => {
-    console.log("in submit")
+  onSubmitFileHandler = (e) => {
     e.preventDefault()
     e.target.value = null;
-    if (!this.state.selectedFile) return;
+    if (!this.state.selectedFile) {
+      return;
+    }
     const formData = new FormData()
-
 
     formData.append("file", this.state.selectedFile)
     this.onClickClearHandler()
     this.setState({interMsg: "Attempting to upload...", actionStart: true})
 
-    axios.post('http://127.0.0.1:5000/upload', formData, {
+    const url = `${Constants.BASE_URL}/upload`
+    axios.post(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     }).then(res => {
-      this.setState({ successMsg: res.data.message, interMsg: "", actionStart: false})
+      this.setState(
+          {successMsg: res.data.message, interMsg: "", actionStart: false})
       this.getReport()
     })
     .catch(err => {
+      if (err.response?.status == 404) {
+        console.error(err.response.data)
+        this.setState({errorMsg: `Could not find URL: ${url}`, interMsg: "", actionStart: false})
+      }
       if (err.response?.data) {
         console.log(`err occured: ${err.response.data.message}`)
-        this.setState({ errorMsg: err.response.data.message, interMsg: "", actionStart: false})
+        this.setState({
+          errorMsg: err.response.data.message,
+          interMsg: "",
+          actionStart: false
+        })
       } else {
         console.log(`other type of err ${err}`)
-        this.setState({ errorMsg: `${err}`, interMsg: "", actionStart: false})
+        this.setState({errorMsg: `${err}`, interMsg: "", actionStart: false})
       }
     })
   }
 
   getReport = () => {
-    // this.onClickClearHandler()
     this.setState({interMsg: "Fetching report...", actionStart: true})
-    axios.get('http://127.0.0.1:5000/report')
+    const url = `${Constants.BASE_URL}/report`
+    axios.get(url)
     .then(res => {
-      this.setState({report: res.data, toggled: "Hide", interMsg: "", actionStart: false})
-      // this.setState({ uploadedFile: true, message: res.data.message })
+      this.setState(
+          {report: res.data, toggled: "Hide", interMsg: "", actionStart: false})
     })
     .catch(err => {
-      console.log(`err is ${err}`)
+      if (err.response?.status == 404) {
+        console.error(err.response.data)
+        this.setState({errorMsg: `Could not find URL: ${url}`, interMsg: "", actionStart: false})
+      }
       if (err.response?.data) {
-        this.setState({ successMsg: err.response.data.message, interMsg: "", actionStart: false})
+        console.log(`err occured: ${err.response.data.message}`)
+        this.setState({
+          successMsg: err.response.data.message,
+          interMsg: "",
+          actionStart: false
+        })
       } else {
         console.log(`other type of err ${err}`)
-        this.setState({ errorMsg: `${err}`, interMsg: "", actionStart: false})
+        this.setState({errorMsg: `${err}`, interMsg: "", actionStart: false})
       }
     })
   }
 
   onClickToggleHandler = (e) => {
-    console.log("in on toggle")
     if (this.state.toggled == "Hide") {
       this.setState({toggled: "Show"})
       return
     }
     this.getReport()
-
   }
 
   renderAlert() {
@@ -126,31 +140,38 @@ class Home extends Component {
         <div className="container">
           <br/>
           <form>
-            <label htmlFor="formFileLg" className="form-label">Upload an pay report file</label>
+            <label htmlFor="formFileLg" className="form-label">Upload an pay
+              report file</label>
             <div className="input-group">
               <input className="form-control" id="formFileLg"
-                     type="file" onChange={this.onChangeHandler}/>
-              <button className="btn btn-primary" type="submit" onClick={this.onSubmitHandler} disabled={this.state.actionStart}>Upload
+                     type="file" onChange={this.onChangeFileHandler}/>
+              <button className="btn btn-primary" type="submit"
+                      onClick={this.onSubmitFileHandler}
+                      disabled={this.state.actionStart}>Upload
               </button>
             </div>
           </form>
           <br/>
           {this.renderAlert()}
-          <div className="row" style={{"justifyContent":"center"}}>
+          <div className="row" style={{"justifyContent": "center"}}>
 
-            <button className="btn btn-secondary" style={{"width":"25%"}} onClick={this.onClickToggleHandler} disabled={this.state.actionStart}>{this.state.toggled} Report</button>
+            <button className="btn btn-secondary" style={{"width": "25%"}}
+                    onClick={this.onClickToggleHandler}
+                    disabled={this.state.actionStart}>{this.state.toggled} Report
+            </button>
 
-            <button className="btn btn-warning" style={{"width":"25%", "marginLeft":"2%"}} onClick={this.onClickClearHandler} disabled={this.state.actionStart}>Clear Messages</button>
+            <button className="btn btn-warning"
+                    style={{"width": "25%", "marginLeft": "2%"}}
+                    onClick={this.onClickClearHandler}
+                    disabled={this.state.actionStart}>Clear Messages
+            </button>
           </div>
 
 
           {
-            this.state.report && this.state.toggled == "Hide" ? <Table report={this.state.report}/> : null
+            this.state.report && this.state.toggled == "Hide" ? <Table
+                report={this.state.report}/> : null
           }
-
-
-
-
 
 
         </div>
