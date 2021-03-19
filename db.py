@@ -143,7 +143,7 @@ def exists_report(con, report_num):
     cur.close()
     if not rows:
       return False
-    return True
+    return True # should be true
   except Exception as e:
     exception_handler(con, e, "Cannot continue since checking if report num exists failed on db")
 

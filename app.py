@@ -25,6 +25,12 @@ def get_report():
   status, report = generate_report(con)
   return jsonify(report), status
 
+@app.after_request
+def after_request(response):
+  header = response.headers
+  header['Access-Control-Allow-Origin'] = '*'
+  return response
+
 def main():
   con = db.initialize_db('example.db')
   # read_csv('time-report-42.csv', con)
