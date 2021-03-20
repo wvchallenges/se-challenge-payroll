@@ -5,7 +5,7 @@ import time
 from werkzeug.security import check_password_hash
 import uuid
 
-
+########### INSERT ###########
 def insert_employee_check(con, emp_id):
   cur = con.cursor()
   cur.execute('''INSERT OR REPLACE INTO EMPLOYEES (id) VALUES (?)''', (emp_id,))
@@ -54,7 +54,7 @@ def insert_csv_row(con, date, hours, emp_id, job, report_num):
   except Exception as e:
     db_helpers.exception_handler(con, e, "Skipping row")
 
-
+########### SELECT ###########
 def get_records_sorted(con):
   cur = con.cursor()
   try:
@@ -85,6 +85,21 @@ def exists_report(con, report_num):
     db_helpers.exception_handler(con, e,
                                  "Cannot continue since checking if report num exists failed on db")
 
+def check_user(con, username, password):
+  cur = con.cursor()
+  try:
+    cur.execute('''SELECT id, password FROM ADMINS WHERE username=?''', (username,))
+    rows = cur.fetchall()
+    cur.close()
+    if not rows:
+      return False
+    if not check_password_hash(rows[0][1], password):
+      return False
+    return rows[0][0]
+  except Exception as e:
+    db_helpers.exception_handler(con, e, f"Unable to check for user in database")
+
+########### CREATE ###########
 def create_user(con, username, password):
   cur = con.cursor()
   try:
@@ -96,18 +111,3 @@ def create_user(con, username, password):
     return con
   except Exception as e:
     db_helpers.exception_handler(con, None, f"Unable to create user {username}. Most likely already exists")
-
-def check_user(con, username, password):
-  cur = con.cursor()
-  try:
-    cur.execute('''SELECT id, password FROM ADMINS WHERE username=?''', (username,))
-    rows = cur.fetchall()
-    print(rows)
-    cur.close()
-    if not rows:
-      return False
-    if not check_password_hash(rows[0][1], password):
-      return False
-    return rows[0][0]
-  except Exception as e:
-    db_helpers.exception_handler(con, e, f"Unable to check for user in database")

@@ -74,7 +74,8 @@ class Login extends Component {
       withCredentials: true
     })
     .then(res => {
-      window.location.href = "/home"
+      // window.location.href = "/home"
+      window.location.reload()
       this.setState(
           {interMsg: "", actionStart: false, username: "", password: ""})
     })

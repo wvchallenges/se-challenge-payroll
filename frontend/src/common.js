@@ -32,7 +32,7 @@ export const renderAlert = (state) => {
   }
   if (state.interMsg) {
     result.push((
-        <div className="d-flex justify-content-center">
+        <div className="d-flex justify-content-center" style={{"marginBottom":"2%"}}>
           <div className="spinner-border" role="status">
             <span className="sr-only"></span>
           </div>
