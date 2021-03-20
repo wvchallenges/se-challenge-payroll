@@ -55,7 +55,8 @@ class Home extends Component {
     axios.post(url, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
-      }
+      },
+      withCredentials: true
     }).then(res => {
       this.setState(
           {successMsg: res.data.message, interMsg: "", actionStart: false})
@@ -69,7 +70,7 @@ class Home extends Component {
   getReport = () => {
     this.setState({interMsg: "Fetching report...", actionStart: true})
     const url = `${Constants.BASE_URL}/report`
-    axios.get(url)
+    axios.get(url, {withCredentials: true})
     .then(res => {
       this.setState(
           {report: res.data, toggled: "Hide", interMsg: "", actionStart: false})

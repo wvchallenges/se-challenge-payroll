@@ -18,7 +18,7 @@ def token_required(f):
     if 'token' in request.cookies:
       token = request.cookies['token']
     if not token:
-      return jsonify({"message": "Missing token in cookies"}), 401
+      return jsonify({"message": "Unauthorized. Missing token in cookies"}), 401
 
     try:
       jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
@@ -63,8 +63,17 @@ def login():
     return resp
   return jsonify({"message": msg}), status
 
-
-
+@app.route('/verify', methods=['GET'])
+def verify():
+  if 'token' in request.cookies:
+    token = request.cookies['token']
+  if not token:
+    return jsonify({}), 401
+  try:
+    jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+    return jsonify({}), 200
+  except:
+    return jsonify({}), 401
 
 @app.after_request
 def after_request(response):
