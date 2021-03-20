@@ -21,21 +21,6 @@ class Home extends Component {
     }
   }
 
-  // errorHandler = (err, url) => {
-  //   this.setState({interMsg: "", actionStart: false})
-  //   if (err.response?.status == 404) {
-  //     console.error(err.response.data)
-  //     this.setState({errorMsg: `Could not find URL: ${url}`})
-  //   }
-  //   if (err.response?.data) {
-  //     console.log(`err occured: ${err.response.data.message}`)
-  //     this.setState({errorMsg: err.response.data.message})
-  //   } else {
-  //     console.log(`other type of err ${err}`)
-  //     this.setState({errorMsg: `${err}`})
-  //   }
-  // }
-
   errorHandlerWrapper = (err, url) => {
     const new_state = Common.errorHandler(err, url)
     console.log(this.state)
@@ -89,42 +74,13 @@ class Home extends Component {
   }
 
   onClickToggleHandler = (e) => {
-    if (this.state.toggled == "Hide") {
+    if (this.state.toggled === "Hide") {
       this.setState({toggled: "Show"})
       return
     }
     this.getReport()
   }
 
-  // renderAlert() {
-  //   const result = [];
-  //   if (this.state.successMsg) {
-  //     result.push((
-  //         <div className="alert alert-success" role="alert">
-  //           {this.state.successMsg}
-  //         </div>
-  //     ))
-  //   }
-  //   if (this.state.errorMsg) {
-  //     result.push((
-  //         <div className="alert alert-danger" role="alert">
-  //           {this.state.errorMsg}
-  //         </div>
-  //     ))
-  //   }
-  //   if (this.state.interMsg) {
-  //     result.push((
-  //         <div className="d-flex justify-content-center">
-  //           <div className="spinner-border" role="status">
-  //             <span className="sr-only"></span>
-  //           </div>
-  //         </div>
-  //     ))
-  //   }
-  //   return (
-  //       <div>{result}</div>
-  //   )
-  // }
 
   onClickLogoutHandler = () => {
     this.setState({interMsg: "Logging out...", actionStart: true})
@@ -132,7 +88,8 @@ class Home extends Component {
     axios.post(url, {}, {
       withCredentials: true
     }).then(res => {
-      window.location.replace("/")
+      window.location.href = "/"
+      this.setState({interMsg: "", actionStart: false})
     })
     .catch(err => {
       this.errorHandlerWrapper(err, url)
@@ -184,7 +141,7 @@ class Home extends Component {
 
 
           {
-            this.state.report && this.state.toggled == "Hide" ? <Table
+            this.state.report && this.state.toggled === "Hide" ? <Table
                 report={this.state.report}/> : null
           }
 

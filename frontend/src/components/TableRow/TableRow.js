@@ -5,10 +5,10 @@ class TableRow extends Component {
   render() {
     return (
         <tr key={uuidv4()}>
-          <th scope="row">{this.props.row["employeeId"]}</th>
-          <td>{this.props.row["payPeriod"]["startDate"]}</td>
-          <td>{this.props.row["payPeriod"]["endDate"]}</td>
-          <td>{this.props.row["amountPaid"]}</td>
+          <th scope="row" key={uuidv4()}>{this.props.row["employeeId"]}</th>
+          <td key={uuidv4()}>{this.props.row["payPeriod"]["startDate"]}</td>
+          <td key={uuidv4()}>{this.props.row["payPeriod"]["endDate"]}</td>
+          <td key={uuidv4()}>{this.props.row["amountPaid"]}</td>
         </tr>
     );
   }

@@ -18,21 +18,6 @@ class Login extends Component {
     }
   }
 
-  // errorHandler = (err, url) => {
-  //   this.setState({interMsg: "", actionStart: false})
-  //   if (err.response?.status == 404) {
-  //     console.error(err.response.data)
-  //     this.setState({errorMsg: `Could not find URL: ${url}`})
-  //   }
-  //   if (err.response?.data) {
-  //     console.log(`err occured: ${err.response.data.message}`)
-  //     this.setState({errorMsg: err.response.data.message})
-  //   } else {
-  //     console.log(`other type of err ${err}`)
-  //     this.setState({errorMsg: `${err}`})
-  //   }
-  // }
-
   errorHandlerWrapper = (err, url) => {
     const new_state = Common.errorHandler(err, url)
     console.log(this.state)
@@ -89,8 +74,7 @@ class Login extends Component {
       withCredentials: true
     })
     .then(res => {
-      window.location.replace('/home')
-
+      window.location.href = "/home"
       this.setState(
           {interMsg: "", actionStart: false, username: "", password: ""})
     })
@@ -103,35 +87,6 @@ class Login extends Component {
     this.setState({successMsg: "", errorMsg: "", interMsg: ""})
   }
 
-  // renderAlert() {
-  //   const result = [];
-  //   if (this.state.successMsg) {
-  //     result.push((
-  //         <div className="alert alert-success" role="alert">
-  //           {this.state.successMsg}
-  //         </div>
-  //     ))
-  //   }
-  //   if (this.state.errorMsg) {
-  //     result.push((
-  //         <div className="alert alert-danger" role="alert">
-  //           {this.state.errorMsg}
-  //         </div>
-  //     ))
-  //   }
-  //   if (this.state.interMsg) {
-  //     result.push((
-  //         <div className="d-flex justify-content-center">
-  //           <div className="spinner-border" role="status">
-  //             <span className="sr-only"></span>
-  //           </div>
-  //         </div>
-  //     ))
-  //   }
-  //   return (
-  //       <div>{result}</div>
-  //   )
-  // }
 
   outerDivStyle = () => {
     return {

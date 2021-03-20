@@ -6,7 +6,7 @@ class Navbar extends Component {
         <div>
           <nav className="navbar navbar-light bg-light">
             <div className="container" style={{"textAlign": "center"}}>
-              <a className="navbar-brand" href="#" style={{"width": "100%"}}>
+              <a className="navbar-brand" href="/#" style={{"width": "100%"}}>
                 <img src="/wave.png" alt="" width="30" height="30"
                      style={{"float": "left"}}/>
                 Payroll Visualizer

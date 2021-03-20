@@ -1,6 +1,6 @@
 export const errorHandler = (err, url) => {
   let new_state = {interMsg: "", actionStart: false}
-  if (err.response?.status == 404) {
+  if (err.response?.status === 404) {
     console.error(err.response.data)
     new_state = {...new_state, errorMsg: `Could not find URL: ${url}`}
   }
