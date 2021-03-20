@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {v4 as uuidv4} from 'uuid'
 
 class TableRow extends Component {
+  // render our table of report rows
   render() {
     return (
         <tr key={uuidv4()}>

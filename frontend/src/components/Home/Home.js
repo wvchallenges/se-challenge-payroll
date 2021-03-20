@@ -10,41 +10,53 @@ class Home extends Component {
 
   constructor() {
     super();
+    // keep track of file selected on upload, the report http response message
+    // types, and whether or not an http request is underway
+    // (in which case we show spinning circle)
     this.state = {
       selectedFile: null,
       report: null,
       toggled: "Show",
       errorMsg: null,
       successMsg: null,
-      interMsg: null,
       actionStart: false
     }
   }
 
   errorHandlerWrapper = (err, url) => {
+    // call the common errorHandler and update the state it returns
+    // common error handler console logs the appropriate errors
     const new_state = Common.errorHandler(err, url)
-    console.log(this.state)
     this.setState(new_state)
-    console.log(this.state)
   }
 
   onChangeFileHandler = (e) => {
+    // user selected csv file, record that in state
     this.setState({selectedFile: e.target.files[0]})
   }
 
   onSubmitFileHandler = (e) => {
+    // user clicks upload on file, now we must process it
     e.preventDefault()
     e.target.value = null;
+
+    // if file is empty, alert user of this
     if (!this.state.selectedFile) {
       this.setState({errorMsg: "Please select a file"})
       return;
     }
-    const formData = new FormData()
 
-    formData.append("file", this.state.selectedFile)
+    // clear all messages off screen when uploading
     this.onClickClearHandler()
-    this.setState({interMsg: "Attempting to upload...", actionStart: true})
 
+    // start creating our http request with form data of the file
+    const formData = new FormData()
+    formData.append("file", this.state.selectedFile)
+
+    // show spinning wheel indicative that we are performing request
+    this.setState({actionStart: true})
+
+    // call endpoint
     const url = `${Constants.BASE_URL}/upload`
     axios.post(url, formData, {
       headers: {
@@ -53,28 +65,37 @@ class Home extends Component {
       withCredentials: true
     }).then(res => {
       this.setState(
-          {successMsg: res.data.message, interMsg: "", actionStart: false})
+          // if successful, show the success message, and stop spinning wheel
+          {successMsg: res.data.message, actionStart: false})
+      // fetch the report and show the user (even if they don't want to see it)
       this.getReport()
     })
     .catch(err => {
+      // call error function if error occured
       this.errorHandlerWrapper(err, url)
     })
   }
 
   getReport = () => {
-    this.setState({interMsg: "Fetching report...", actionStart: true})
+    // generate the report
+    this.setState({actionStart: true})
+
+    // call endpoint
     const url = `${Constants.BASE_URL}/report`
     axios.get(url, {withCredentials: true})
     .then(res => {
       this.setState(
-          {report: res.data, toggled: "Hide", interMsg: "", actionStart: false})
+          // toggle reports button should not say "Hide report"
+          {report: res.data, toggled: "Hide", actionStart: false})
     })
     .catch(err => {
+      // call error function if error occured
       this.errorHandlerWrapper(err, url)
     })
   }
 
   onClickToggleHandler = (e) => {
+    // if user click toggle report, hide the report, or show it
     if (this.state.toggled === "Hide") {
       this.setState({toggled: "Show"})
       return
@@ -82,37 +103,47 @@ class Home extends Component {
     this.getReport()
   }
 
-
   onClickLogoutHandler = () => {
-    this.setState({interMsg: "Logging out...", actionStart: true})
+    // user clicks logout button
+    // show spinning wheel indicative that we are performing request
+    this.setState({actionStart: true})
+
+    // call endpoint
     const url = `${Constants.BASE_URL}/logout`
     axios.post(url, {}, {
       withCredentials: true
     }).then(res => {
-      this.setState({interMsg: "", successMsg: "Redirecting...", actionStart: false})
-      // window.location.href = "/"
+      this.setState(
+          {interMsg: "", successMsg: "Redirecting...", actionStart: false})
+      // refresh the window on logout, this should redirect us via router
       window.location.reload()
 
     })
     .catch(err => {
+      // call error function if error occured
       this.errorHandlerWrapper(err, url)
     })
   }
 
   onClickClearHandler = () => {
-    this.setState({successMsg: "", errorMsg: "", interMsg: ""})
+    // if user click clear messages, clear all messages
+    this.setState({successMsg: "", errorMsg: ""})
   }
 
   render() {
     return (
         <div className="container">
           <br/>
-          <button className="btn btn-danger" type="submit" style={{"float":"right"}} onClick={this.onClickLogoutHandler}>Logout</button>
+          <button className="btn btn-danger" type="submit"
+                  style={{"float": "right"}}
+                  onClick={this.onClickLogoutHandler}>Logout
+          </button>
           <br/>
           <div className="jumbotron jumbotron-fluid">
-            <div className="container" style={{"textAlign":"center"}}>
+            <div className="container" style={{"textAlign": "center"}}>
               <h1 className="display-4">Upload a pay report to get started!</h1>
-              <p className="lead">View the report to see a high level overview.</p>
+              <p className="lead">View the report to see a high level
+                overview.</p>
             </div>
           </div>
           <br/>
@@ -142,12 +173,10 @@ class Home extends Component {
             </button>
           </div>
 
-
           {
             this.state.report && this.state.toggled === "Hide" ? <Table
                 report={this.state.report}/> : null
           }
-
 
         </div>
     );

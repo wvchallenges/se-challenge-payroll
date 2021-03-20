@@ -3,6 +3,8 @@ import TableRow from "../TableRow/TableRow";
 import {v4 as uuidv4} from 'uuid'
 
 class Table extends Component {
+  // create the table headers, and for each row passed in, render it as
+  // another component
   render() {
     return (
         <div>

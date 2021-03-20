@@ -17,6 +17,7 @@ class App extends Component {
 
   constructor() {
     super();
+    // store info about whether we are currently logged in, or trying to check
     this.state = {
       loggedIn: false,
       authenticating: false
@@ -24,16 +25,18 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({ authenticating: true})
+    // when page loads, check to see if we are logged in
+    // this verifies the jwt token on the server side
+    this.setState({authenticating: true})
     const url = `${Constants.BASE_URL}/verify`
-    axios.get(url,{
+    axios.get(url, {
       withCredentials: true
     })
     .then(res => {
-      this.setState({ loggedIn: true, authenticating: false  })
+      this.setState({loggedIn: true, authenticating: false})
     })
     .catch(err => {
-      this.setState({ loggedIn: false, authenticating: false })
+      this.setState({loggedIn: false, authenticating: false})
     })
   }
 
@@ -44,15 +47,17 @@ class App extends Component {
           <Navbar/>
           <Router>
             <Switch>
-              <Route
-                  render={({ location }) => !['/', '/home'].includes(location.pathname)
-                      ? <NoMatch/>
-                      : <React.Fragment>               { !this.state.authenticating ?
+              <Route render={({location}) => !['/', '/home'].includes(location.pathname)
+                      ? <NoMatch/> :
+                      <React.Fragment>
+                        {!this.state.authenticating ?
                           <React.Fragment>
-                            <Route exact path="/home" render={() => this.state.loggedIn ?
-                                <Home/> : <Redirect to="/" /> }/>
-                            <Route exact path="/" render={() => !this.state.loggedIn ?
-                                <Login/> : <Redirect to="/home" /> }/>
+                            <Route exact path="/home"
+                                   render={() => this.state.loggedIn ?
+                                       <Home/> : <Redirect to="/"/>}/>
+                            <Route exact path="/"
+                                   render={() => !this.state.loggedIn ?
+                                       <Login/> : <Redirect to="/home"/>}/>
                           </React.Fragment> : null
                       }</React.Fragment>
                   }
