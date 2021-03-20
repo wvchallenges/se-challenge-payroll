@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import axios from "axios";
 import * as Constants from '../../constants'
+import { withRouter } from "react-router-dom";
+
 
 class Login extends Component {
 
@@ -76,6 +78,8 @@ class Login extends Component {
       withCredentials: true
     })
     .then(res => {
+      window.location.replace('/home')
+
       this.setState(
           {interMsg: "", actionStart: false, username: "", password: ""})
     })
@@ -160,4 +164,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default withRouter(Login);

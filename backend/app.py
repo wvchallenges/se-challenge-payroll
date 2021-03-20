@@ -11,6 +11,8 @@ app.config["JSON_SORT_KEYS"] = False
 app.config["SECRET_KEY"] = "secret"
 con = db_helpers.get_connection()
 
+jwtEncodedToDecoded = {}
+
 def token_required(f):
   @wraps(f)
   def decorated(*args, **kwargs):
@@ -21,7 +23,11 @@ def token_required(f):
       return jsonify({"message": "Unauthorized. Missing token in cookies"}), 401
 
     try:
-      jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+      if token in jwtEncodedToDecoded:
+        pass
+      else:
+        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        jwtEncodedToDecoded[token] = decoded
     except:
       return jsonify({"message": "Token is invalid"}), 401
     return f(*args, **kwargs)
@@ -58,6 +64,7 @@ def login():
   status, msg, id = route_helpers.check_login(con, auth.username, auth.password)
   if status == 200:
     token = jwt.encode({'user': id}, app.config['SECRET_KEY'], algorithm="HS256")
+    jwtEncodedToDecoded[token] = id
     resp = make_response(jsonify({'token': token}), 200)
     resp.set_cookie('token', token, httponly=True)
     return resp
@@ -65,15 +72,28 @@ def login():
 
 @app.route('/verify', methods=['GET'])
 def verify():
+  token = None
   if 'token' in request.cookies:
     token = request.cookies['token']
   if not token:
     return jsonify({}), 401
   try:
-    jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+    if token in jwtEncodedToDecoded:
+      return jsonify({}), 200
+    decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+    jwtEncodedToDecoded[token] = decoded
     return jsonify({}), 200
   except:
     return jsonify({}), 401
+
+@app.route('/logout', methods=['POST'])
+@token_required
+def logout():
+  resp = make_response(jsonify({}), 200)
+  resp.delete_cookie('token')
+  print("deleted cookie")
+  return resp
+
 
 @app.after_request
 def after_request(response):

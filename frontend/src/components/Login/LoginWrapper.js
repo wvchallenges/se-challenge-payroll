@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Home from "../Home/Home";
 import Login from "./Login";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect, withRouter } from "react-router-dom";
 import axios from "axios";
 import * as Constants from "../../constants";
 
@@ -28,6 +28,7 @@ class LoginWrapper extends Component {
   }
 
   componentDidMount() {
+    console.log("checking")
     this.checkToken()
   }
 

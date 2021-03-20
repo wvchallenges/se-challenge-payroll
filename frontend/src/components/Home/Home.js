@@ -118,6 +118,19 @@ class Home extends Component {
     )
   }
 
+  onClickLogoutHandler = () => {
+    this.setState({interMsg: "Logging out...", actionStart: true})
+    const url = `${Constants.BASE_URL}/logout`
+    axios.post(url, {}, {
+      withCredentials: true
+    }).then(res => {
+      window.location.replace("/")
+    })
+    .catch(err => {
+      this.errorHandler(err, url)
+    })
+  }
+
   onClickClearHandler = () => {
     this.setState({successMsg: "", errorMsg: "", interMsg: ""})
   }
@@ -126,9 +139,16 @@ class Home extends Component {
     return (
         <div className="container">
           <br/>
+          <button className="btn btn-danger" type="submit" style={{"float":"right"}} onClick={this.onClickLogoutHandler}>Logout</button>
+          <br/>
+          <div className="jumbotron jumbotron-fluid">
+            <div className="container" style={{"textAlign":"center"}}>
+              <h1 className="display-4">Upload a pay report to get started!</h1>
+              <p className="lead">View the report to see a high level overview.</p>
+            </div>
+          </div>
+          <br/>
           <form>
-            <label htmlFor="formFileLg" className="form-label">Upload an pay
-              report file</label>
             <div className="input-group">
               <input className="form-control" id="formFileLg"
                      type="file" onChange={this.onChangeFileHandler}/>
