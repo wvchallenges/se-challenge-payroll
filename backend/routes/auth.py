@@ -51,3 +51,11 @@ def logout():
   resp.delete_cookie('token')
   print("deleted cookie")
   return resp
+
+# @routes.after_request
+# def after_request(response):
+#   header = response.headers
+#   header['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+#   header['Access-Control-Allow-Headers'] = 'Authorization,Content-Type'
+#   header['Access-Control-Allow-Credentials'] = 'true'
+#   return response

@@ -30,6 +30,14 @@ def token_required(f):
     return f(*args, **kwargs)
   return decorated
 
+@routes.after_request
+def after_request(response):
+  header = response.headers
+  header['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+  header['Access-Control-Allow-Headers'] = 'Authorization,Content-Type'
+  header['Access-Control-Allow-Credentials'] = 'true'
+  return response
+
 from .admin import *
 from .auth import *
 

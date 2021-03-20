@@ -16,3 +16,11 @@ def upload_file():
 def get_report():
   status, report = route_helpers.generate_report(con)
   return jsonify(report), status
+
+# @routes.after_request
+# def after_request(response):
+#   header = response.headers
+#   header['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+#   header['Access-Control-Allow-Headers'] = 'Authorization,Content-Type'
+#   header['Access-Control-Allow-Credentials'] = 'true'
+#   return response

@@ -31,6 +31,7 @@ class Login extends Component {
   }
 
   onSubmitSignupHandler = (e) => {
+    console.log(e)
     e.preventDefault()
     if (!(this.state.username && this.state.password)) {
       this.setState({errorMsg: "Please fill in both fields"})
@@ -84,6 +85,10 @@ class Login extends Component {
     })
   }
 
+  onSubmitForm = () => {
+    console.log("subbmited form")
+  }
+
   onClickClearHandler = () => {
     this.setState({successMsg: "", errorMsg: "", interMsg: ""})
   }
@@ -121,11 +126,11 @@ class Login extends Component {
               </div>
               <div className="form-group">
                 <br/>
-                <button type="submit" className="btn btn-primary"
+                <button type="button" className="btn btn-primary"
                         onClick={this.onSubmitSignupHandler}
                         disabled={this.state.actionStart}>Sign Up
                 </button>
-                <button type="submit" className="btn btn-success"
+                <button type="button" className="btn btn-success"
                         style={{"marginLeft": "2%"}}
                         onClick={this.onSubmitLoginHandler}
                         disabled={this.state.actionStart}>Login
