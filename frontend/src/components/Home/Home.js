@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from "axios";
 import Table from "../Table/Table";
 import * as Constants from '../../constants'
+import * as Common from '../../common'
 
 const FormData = require('form-data');
 
@@ -20,19 +21,26 @@ class Home extends Component {
     }
   }
 
-  errorHandler = (err, url) => {
-    this.setState({interMsg: "", actionStart: false})
-    if (err.response?.status == 404) {
-      console.error(err.response.data)
-      this.setState({errorMsg: `Could not find URL: ${url}`})
-    }
-    if (err.response?.data) {
-      console.log(`err occured: ${err.response.data.message}`)
-      this.setState({errorMsg: err.response.data.message})
-    } else {
-      console.log(`other type of err ${err}`)
-      this.setState({errorMsg: `${err}`})
-    }
+  // errorHandler = (err, url) => {
+  //   this.setState({interMsg: "", actionStart: false})
+  //   if (err.response?.status == 404) {
+  //     console.error(err.response.data)
+  //     this.setState({errorMsg: `Could not find URL: ${url}`})
+  //   }
+  //   if (err.response?.data) {
+  //     console.log(`err occured: ${err.response.data.message}`)
+  //     this.setState({errorMsg: err.response.data.message})
+  //   } else {
+  //     console.log(`other type of err ${err}`)
+  //     this.setState({errorMsg: `${err}`})
+  //   }
+  // }
+
+  errorHandlerWrapper = (err, url) => {
+    const new_state = Common.errorHandler(err, url)
+    console.log(this.state)
+    this.setState(new_state)
+    console.log(this.state)
   }
 
   onChangeFileHandler = (e) => {
@@ -63,7 +71,7 @@ class Home extends Component {
       this.getReport()
     })
     .catch(err => {
-      this.errorHandler(err, url)
+      this.errorHandlerWrapper(err, url)
     })
   }
 
@@ -76,7 +84,7 @@ class Home extends Component {
           {report: res.data, toggled: "Hide", interMsg: "", actionStart: false})
     })
     .catch(err => {
-      this.errorHandler(err, url)
+      this.errorHandlerWrapper(err, url)
     })
   }
 
@@ -88,35 +96,35 @@ class Home extends Component {
     this.getReport()
   }
 
-  renderAlert() {
-    const result = [];
-    if (this.state.successMsg) {
-      result.push((
-          <div className="alert alert-success" role="alert">
-            {this.state.successMsg}
-          </div>
-      ))
-    }
-    if (this.state.errorMsg) {
-      result.push((
-          <div className="alert alert-danger" role="alert">
-            {this.state.errorMsg}
-          </div>
-      ))
-    }
-    if (this.state.interMsg) {
-      result.push((
-          <div className="d-flex justify-content-center">
-            <div className="spinner-border" role="status">
-              <span className="sr-only"></span>
-            </div>
-          </div>
-      ))
-    }
-    return (
-        <div>{result}</div>
-    )
-  }
+  // renderAlert() {
+  //   const result = [];
+  //   if (this.state.successMsg) {
+  //     result.push((
+  //         <div className="alert alert-success" role="alert">
+  //           {this.state.successMsg}
+  //         </div>
+  //     ))
+  //   }
+  //   if (this.state.errorMsg) {
+  //     result.push((
+  //         <div className="alert alert-danger" role="alert">
+  //           {this.state.errorMsg}
+  //         </div>
+  //     ))
+  //   }
+  //   if (this.state.interMsg) {
+  //     result.push((
+  //         <div className="d-flex justify-content-center">
+  //           <div className="spinner-border" role="status">
+  //             <span className="sr-only"></span>
+  //           </div>
+  //         </div>
+  //     ))
+  //   }
+  //   return (
+  //       <div>{result}</div>
+  //   )
+  // }
 
   onClickLogoutHandler = () => {
     this.setState({interMsg: "Logging out...", actionStart: true})
@@ -127,7 +135,7 @@ class Home extends Component {
       window.location.replace("/")
     })
     .catch(err => {
-      this.errorHandler(err, url)
+      this.errorHandlerWrapper(err, url)
     })
   }
 
@@ -159,7 +167,7 @@ class Home extends Component {
             </div>
           </form>
           <br/>
-          {this.renderAlert()}
+          {Common.renderAlert(this.state)}
           <div className="row" style={{"justifyContent": "center"}}>
 
             <button className="btn btn-secondary" style={{"width": "25%"}}
