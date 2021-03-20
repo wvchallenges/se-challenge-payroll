@@ -4,12 +4,18 @@ import jwt
 from functools import wraps
 
 routes = Blueprint('routes', __name__)
+
+# used to encode jwt token
 SECRET_KEY = "secret"
 
+# get the initial connection from the db which will be used across all methods
 con = db_helpers.get_connection()
 
+# store a map of encoded jwt keys and their originals, for faster lookup
 jwtEncodedToDecoded = {}
 
+
+# makes sure jwt token is present for certain request types
 def token_required(f):
   @wraps(f)
   def decorated(*args, **kwargs):
@@ -28,8 +34,11 @@ def token_required(f):
     except:
       return jsonify({"message": "Token is invalid"}), 401
     return f(*args, **kwargs)
+
   return decorated
 
+
+# cors and cookies headers required
 @routes.after_request
 def after_request(response):
   header = response.headers
@@ -38,6 +47,6 @@ def after_request(response):
   header['Access-Control-Allow-Credentials'] = 'true'
   return response
 
+
 from .admin import *
 from .auth import *
-

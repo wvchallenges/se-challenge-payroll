@@ -5,6 +5,7 @@ from . import routes, con, token_required, jwtEncodedToDecoded, jwt, \
   route_helpers, SECRET_KEY
 
 
+# create an admin user to use the application
 @routes.route('/signup', methods=['POST'])
 def create_user():
   data = request.get_json()
@@ -14,6 +15,8 @@ def create_user():
   status, msg = route_helpers.create_login(con, data['username'], hashed_pwd)
   return jsonify({"message": msg}), status
 
+
+# login as user, and return cookies with jwt token
 @routes.route('/login', methods=['POST'])
 def login():
   auth = request.authorization
@@ -28,6 +31,8 @@ def login():
     return resp
   return jsonify({"message": msg}), status
 
+
+# verify jwt token is valid (used in frontend to make sure we are still logged in)
 @routes.route('/verify', methods=['GET'])
 def verify():
   token = None
@@ -44,6 +49,8 @@ def verify():
   except:
     return jsonify({}), 401
 
+
+# logout the user and delete the jwt token cookie
 @routes.route('/logout', methods=['POST'])
 @token_required
 def logout():
@@ -51,11 +58,3 @@ def logout():
   resp.delete_cookie('token')
   print("deleted cookie")
   return resp
-
-# @routes.after_request
-# def after_request(response):
-#   header = response.headers
-#   header['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-#   header['Access-Control-Allow-Headers'] = 'Authorization,Content-Type'
-#   header['Access-Control-Allow-Credentials'] = 'true'
-#   return response
