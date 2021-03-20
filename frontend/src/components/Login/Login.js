@@ -33,6 +33,7 @@ class Login extends Component {
   onSubmitSignupHandler = (e) => {
     console.log(e)
     e.preventDefault()
+    this.onClickClearHandler()
     if (!(this.state.username && this.state.password)) {
       this.setState({errorMsg: "Please fill in both fields"})
       return

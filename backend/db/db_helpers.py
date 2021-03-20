@@ -1,4 +1,5 @@
 import sqlite3 as sql
+import os
 
 DB_FILENAME = "example.db"
 
@@ -19,3 +20,11 @@ def get_connection():
   except Exception as e:
     exception_handler(con, e, "Cannot continue since db connect failed")
     exit(1)
+
+def delete_db():
+  try:
+    os.remove(DB_FILENAME)
+  except Exception as e:
+    raise Exception(f"Unable to delete db file: {e}")
+    exit(1)
+

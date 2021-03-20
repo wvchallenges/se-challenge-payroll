@@ -17,7 +17,7 @@ class NoMatch extends Component {
           <div className="container" style={{"width": "35%"}}>
             <div className="jumbotron jumbotron-fluid">
               <div className="container" style={{"textAlign": "center"}}>
-                <h1 className="display-4">404. Not Found</h1>
+                <h1 className="display-4">404. Path Not Found</h1>
                 <p className="lead">Click {<Link to="/">here</Link>} to return home.</p>
               </div>
             </div>

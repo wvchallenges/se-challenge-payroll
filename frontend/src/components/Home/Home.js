@@ -36,6 +36,7 @@ class Home extends Component {
     e.preventDefault()
     e.target.value = null;
     if (!this.state.selectedFile) {
+      this.setState({errorMsg: "Please select a file"})
       return;
     }
     const formData = new FormData()

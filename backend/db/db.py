@@ -7,6 +7,7 @@ def initialize_db():
   con = None
 
   try:
+    db_helpers.delete_db()
     con = db_helpers.get_connection()
     cur = con.cursor()
 

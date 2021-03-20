@@ -44,16 +44,19 @@ class App extends Component {
           <Navbar/>
           <Router>
             <Switch>
-              { !this.state.authenticating ?
-                  <React.Fragment>
-                    <Route exact path="/home" render={() => this.state.loggedIn ?
-                        <Home/> : <Redirect to="/" /> }/>
-                    <Route exact path="/" render={() => !this.state.loggedIn ?
-                        <Login/> : <Redirect to="/home" /> }/>
-                  </React.Fragment> : null
-              }
-              <Route path="*" render={() => <Redirect to="/"/>}/>
-
+              <Route
+                  render={({ location }) => !['/', '/home'].includes(location.pathname)
+                      ? <NoMatch/>
+                      : <React.Fragment>               { !this.state.authenticating ?
+                          <React.Fragment>
+                            <Route exact path="/home" render={() => this.state.loggedIn ?
+                                <Home/> : <Redirect to="/" /> }/>
+                            <Route exact path="/" render={() => !this.state.loggedIn ?
+                                <Login/> : <Redirect to="/home" /> }/>
+                          </React.Fragment> : null
+                      }</React.Fragment>
+                  }
+              />
 
             </Switch>
           </Router>
