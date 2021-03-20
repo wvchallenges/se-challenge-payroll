@@ -1,12 +1,16 @@
 import sys
 
 import db_helpers
+import uuid
+
+from werkzeug.security import generate_password_hash
 
 
 def initialize_db():
   con = None
 
   try:
+    # delete the db file if exists
     db_helpers.delete_db()
     con = db_helpers.get_connection()
     cur = con.cursor()
@@ -61,9 +65,14 @@ def migrate_db():
     con = db_helpers.get_connection()
     cur = con.cursor()
 
+    # add in jobs info, prepopulate with a test user too
     cur.execute('''DELETE FROM JOBS''')
+    cur.execute('''DELETE FROM ADMINS''')
     cur.execute('''INSERT INTO JOBS (name, rate) VALUES (?,?)''', ('A', 20,))
     cur.execute('''INSERT INTO JOBS (name, rate) VALUES (?,?)''', ('B', 30,))
+    id = str(uuid.uuid4())
+    cur.execute('''INSERT INTO ADMINS (id, username, password) VALUES (?,?,?)''',
+                (id, "test",   generate_password_hash("test", method='sha256')))
 
     con.commit()
     cur.close()

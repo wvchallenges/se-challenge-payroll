@@ -89,7 +89,7 @@ class Home extends Component {
     axios.post(url, {}, {
       withCredentials: true
     }).then(res => {
-      this.setState({interMsg: "", actionStart: false})
+      this.setState({interMsg: "", successMsg: "Redirecting...", actionStart: false})
       // window.location.href = "/"
       window.location.reload()
 

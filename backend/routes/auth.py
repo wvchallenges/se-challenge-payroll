@@ -12,7 +12,7 @@ def create_user():
   if 'password' not in data or 'username' not in data:
     return jsonify({"message": "username or password field missing"}), 400
   hashed_pwd = generate_password_hash(data['password'], method='sha256')
-  status, msg = route_helpers.create_login(con, data['username'], hashed_pwd)
+  status, msg = route_helpers.create_user(con, data['username'], hashed_pwd)
   return jsonify({"message": msg}), status
 
 

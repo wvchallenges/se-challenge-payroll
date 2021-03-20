@@ -79,7 +79,7 @@ class Login extends Component {
       // window.location.href = "/home"
       window.location.reload()
       this.setState(
-          {interMsg: "", actionStart: false, username: "", password: ""})
+          {interMsg: "", successMsg: "Redirecting...", actionStart: false, username: "", password: ""})
     })
     .catch(err => {
       this.errorHandlerWrapper(err, url)
