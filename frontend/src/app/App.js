@@ -12,6 +12,7 @@ import {
 import Home from "../components/Home/Home";
 import Login from "../components/Login/Login";
 import NoMatch from "../components/NoMatch/NoMatch";
+import Loading from "../components/Loading/Loading";
 
 class App extends Component {
 
@@ -50,7 +51,8 @@ class App extends Component {
               <Route render={({location}) => !['/', '/home'].includes(location.pathname)
                       ? <NoMatch/> :
                       <React.Fragment>
-                        {!this.state.authenticating ?
+                        {this.state.authenticating ?
+                            <Loading/> :
                           <React.Fragment>
                             <Route exact path="/home"
                                    render={() => this.state.loggedIn ?
@@ -58,7 +60,7 @@ class App extends Component {
                             <Route exact path="/"
                                    render={() => !this.state.loggedIn ?
                                        <Login/> : <Redirect to="/home"/>}/>
-                          </React.Fragment> : null
+                          </React.Fragment>
                       }</React.Fragment>
                   }
               />
