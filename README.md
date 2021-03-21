@@ -133,16 +133,16 @@ Instructions on how to build/run your application:
 This application was built using microservice architecture. There is a <b>frontend</b> and a <b>backend</b> folder that make up the app. The technologies used are:
 
 - frontend: <b>react</b> (tested on node v12.14.0)
-- backend: <b> flask </b> (tested on python3)
+- backend: <b> flask </b> (tested on python3 and pip3)
 - database: <b> sqlite3 </b> (python inbuilt library)
 
-You can either test locally, or through docker:
+You can either test locally, or through docker (assuming python3 and pip3 are installed for local testing):
 
 Docker (recommended)
 ---
 ```
 # root folder
-# you will see "To ignore, add // eslint-disable-next-line to the line before."
+# you will see "You can now view frontend in the browser"
 # that's when you know it is complete
 docker-compose up
 ```
@@ -163,8 +163,8 @@ backend:
 cd backend
 
 ##### OPTIONAL #####
-python -m venv env
-env\Scripts\activate
+python -m venv env # if venv not installed: apt-get install python3-venv
+source env/bin/activate # for windows, you can use env\Scripts\activate 
 ##### OPTIONAL #####
 
 pip install -r req.txt
