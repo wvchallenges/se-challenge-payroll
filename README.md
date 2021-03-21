@@ -1,3 +1,4 @@
+
 # Wave Software Development Challenge
 
 Applicants for the Full-stack Developer role at Wave must
@@ -124,11 +125,118 @@ We consider ourselves to be language agnostic here at Wave, so feel free to use 
 
 Please commit the following to this `README.md`:
 
-1. Instructions on how to build/run your application
-1. Answers to the following questions:
+Instructions on how to build/run your application:
+
+This application was built on microservice architecture. There is a <b>frontend</b> and a <b>backend</b> folder that make up the app. The technologies used are:
+
+- frontend: <b>react</b> (tested on node v12.14.0)
+- backend: <b> flask </b> (tested on python3)
+- database: <b> sqlite </b> (python inbuilt library)
+
+You can either test locally, or through docker:
+
+Docker (recommended)
+---
+```
+# root folder
+# you will see "To ignore, add // eslint-disable-next-line to the line before."
+# that's when you know it is complete
+docker-compose up
+```
+
+navigate to `http://localhost:3000/` for the frontend
+navigate to `http://localhost:5000/` for the backend
+
+Local Testing
+---
+frontend:
+```
+cd frontend
+npm install
+npm start
+```
+backend:
+```
+cd backend
+
+##### OPTIONAL #####
+python -m venv env
+env\Scripts\activate
+##### OPTIONAL #####
+
+pip install -r req.txt
+python db/db.py init
+python db/db.py migrate
+python app.py
+```
+
+navigate to `http://localhost:3000/` for the frontend
+navigate to `http://localhost:5000/` for the backend
+
+
+
+Answers to the following questions:
    - How did you test that your implementation was correct?
+	   - From a logic standpoint:
+		   - I attempted to test many edge cases through the csv file
+		   - For example, I would upload the same file twice (under a different name), and make sure all the values in amount paid would double
+		   - I also tested when employees were were paid twice on a single day, paid during both pay periods, paid during a single period, and also paid on the exact middle date to make sure all of that responds correctly
+		   - Other edge cases I tested was when the csv was completely empty
+		   - Although the README said there would not be a malformed csv, I decided to check cases like that too, and made sure my program responded appropriately
+	   - From a UX standpoint:
+		   - I made sure that the table rendered matches the JSON response from the API, and made sure that no rows were being left out.
+
    - If this application was destined for a production environment, what would you add or change?
+	   - Use an ORM to access the database
+		   - The first thing I would do is change the way the server accesses the sqlite db
+		   - I would use an ORM like SQLAlchemy as it keeps the code much neater, and keep its extremely simple
+	   - Use session based authentication with JWT
+		   - I would also look into implementing a session for the user rather than storing a JWT token in the cookies, as a session is much safer and less prone to attacks
+	   - Deploy through docker only as it is much simpler
+		   - Currently in my docker-compose file, I pass in the backend url to the frontend, and pass in the frontend url to the backend for cors related tasks
+		   - I would modify my docker-compose file to instead pass in the name of an environment, and actually have the urls stored in a javascript file or .env file
+		   - Then, all I have to do is change my code to pick off urls based off the env name, and it should work
+		   - If I want to deploy to dev, I just change the docker-compose env variable to be dev, and the application should use the dev urls
+	   - Use a random key generator to generate the JWT secret key
+		   - Currently, it is passed in through an env variable, or set to its default value
+		   - A random key generated on the fly would be much better
+	   - Make sure frontend and backend are using production builds
+		   - For flask backend, the DEBUG=True flag should be changed
+		   - For react frontend, we should be serving the static assets of a production build
    - What compromises did you have to make as a result of the time constraints of this challenge?
+	   - Did not use an ORM like SQLAlchemy
+		   - I firstly decided not to use an ORM like SQLAlchemy, simply because I haven't used it in a while, and it would just be faster for me to write the queries by hand
+		   - The ORM would've cleaned up the code nicely and reduced the query sizes, but I just decided to use the queries themselves for practice and time constraints
+		   - The ORM would also force me to create class models that represent the database structure, and thus I just decided to quickly go with the queries themselves and skip all of that
+	   - Did not use session based authentication with JWT
+		   - I also decided implement very basic security, including a JWT token that authenticates the HR admin user
+		   - The compromise that I had to make was that I decided to store the token in the cookies rather than creating a server side session, and storing the token in that
+		   - A session would allow me to store important information on the server side, and would be easily accessible through there
+		   - Even though I use the httpOnly flag on the cookie, it is still more secure to use a session due to a session id, which is the only thing visible
+	   - Did not do unit testing through the flask api
+		   - I don't know how to unit test through the flask api, it would have to be something that I would have to look into
+		   - For a larger project, it may be better to use a more structured framework like Django 
+
+# Tables
+- ADMINS (id, username, password)
+	- stores info about users who can access the application
+	- password is hashed, id is a generated uuid
+
+- EMPLOYEES (id)
+	- stores info about all employees
+	- the id is used as a foreign in the EMPLOYEE_LOGS table
+
+- EMPLOYEE_LOGS (employee_id, log_date, hours, job_name, report_num)
+	- employee_id is a foreign key that references the id column in the EMPLOYEES table
+	- realistically, the EMPLOYEES table should be populated before the csv file is uploaded, to make sure that we don't upload a file that has records of an employee that doesn't exist
+	- log_date is stored as a unix timestamp, easier for sorting
+	- report_num is there so we know which reports have already been uploaded
+	- it might be good to store report_num in its own table instead
+
+- JOBS (name, rate)
+	- stores the name of the job "A" or "B", and the rate (20 or 30)
+	- the job_name in EMPLOYEE_LOGS is a foreign key to name
+	- if we run into a csv row with a job name we do not recognize, we don't process the csv file
 
 ## Submission Instructions
 
