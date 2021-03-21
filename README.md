@@ -128,7 +128,7 @@ Please commit the following to this `README.md`:
 
 Instructions on how to build/run your application:
 
-[Video](https://youtu.be/6qVrgmQRMDs)
+[Video](https://youtu.be/EZ-7mEelTsc)
 
 This application was built on microservice architecture. There is a <b>frontend</b> and a <b>backend</b> folder that make up the app. The technologies used are:
 
