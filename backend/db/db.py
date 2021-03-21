@@ -46,7 +46,7 @@ def initialize_db():
     FOREIGN KEY (employee_id)
       REFERENCES EMPLOYEE(id),
     FOREIGN KEY (job_name)
-      REFERENCES JOB(name)
+      REFERENCES JOBS(name)
     )''')
 
     con.commit()

@@ -43,7 +43,7 @@ def generate_report(con):
   for emp_id, timestamp, earnings in rows:
     # inner json, consisting of id, pay period and amount paid
     report = OrderedDict()
-    report["employeeId"] = int(emp_id)
+    report["employeeId"] = str(emp_id)
     amountPaid = f"${earnings}"
     payPeriod = calculatePeriod(timestamp)
 
@@ -54,11 +54,11 @@ def generate_report(con):
       # there's already a record, so update the earnings in that record
       currentEarnings = float(employeeReports[key]["amountPaid"][1:])
       employeeReports[key][
-        "amountPaid"] = f"${currentEarnings + float(earnings)}"
+        "amountPaid"] = "${:.2f}".format(currentEarnings + float(earnings))
     else:
       # no record, add it in
       report["payPeriod"] = payPeriod
-      report["amountPaid"] = amountPaid
+      report["amountPaid"] = "${:.2f}".format(float(earnings))
       employeeReports[key] = report
 
   # finalize json
@@ -74,6 +74,8 @@ def calculatePeriod(timestamp):
   # convert unix timestamp to human date
   dt = datetime.fromtimestamp(timestamp)
   month, day, year = dt.month, dt.day, dt.year
+  if len(str(month)) == 1:
+    month = f"0{month}"
 
   # dates is our pay period object
   dates = OrderedDict()
