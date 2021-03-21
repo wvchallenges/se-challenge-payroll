@@ -130,11 +130,11 @@ Instructions on how to build/run your application:
 
 [Video](https://youtu.be/EZ-7mEelTsc)
 
-This application was built on microservice architecture. There is a <b>frontend</b> and a <b>backend</b> folder that make up the app. The technologies used are:
+This application was built using microservice architecture. There is a <b>frontend</b> and a <b>backend</b> folder that make up the app. The technologies used are:
 
 - frontend: <b>react</b> (tested on node v12.14.0)
 - backend: <b> flask </b> (tested on python3)
-- database: <b> sqlite </b> (python inbuilt library)
+- database: <b> sqlite3 </b> (python inbuilt library)
 
 You can either test locally, or through docker:
 
@@ -183,7 +183,7 @@ Answers to the following questions:
 	   - From a logic standpoint:
 		   - I attempted to test many edge cases through the csv file
 		   - For example, I would upload the same file twice (under a different name), and make sure all the values in amount paid would double
-		   - I also tested when employees were were paid twice on a single day, paid during both pay periods, paid during a single period, and also paid on the exact middle date to make sure all of that responds correctly
+		   - I also tested when employees were paid twice on a single day, paid during both periods, paid during a single period, and also paid on the exact middle date of the month
 		   - Other edge cases I tested was when the csv was completely empty
 		   - Although the README said there would not be a malformed csv, I decided to check cases like that too, and made sure my program responded appropriately
 	   - From a UX standpoint:
@@ -191,8 +191,8 @@ Answers to the following questions:
 
    - If this application was destined for a production environment, what would you add or change?
 	   - Use an ORM to access the database
-		   - The first thing I would do is change the way the server accesses the sqlite db
-		   - I would use an ORM like SQLAlchemy as it keeps the code much neater, and keep its extremely simple
+		   - The first thing I would do is change the way the server accesses the sqlite3 db
+		   - I would use an ORM like SQLAlchemy as it keeps the code much neater and very simple
 	   - Use session based authentication with JWT
 		   - I would also look into implementing a session for the user rather than storing a JWT token in the cookies, as a session is much safer and less prone to attacks
 	   - Deploy through docker only as it is much simpler
@@ -223,17 +223,18 @@ Answers to the following questions:
 # Tables
 - ADMINS (id, username, password)
 	- stores info about users who can access the application
-	- password is hashed, id is a generated uuid
+	- password is hashed, id is a generated uuid that the JWT is based on
 
 - EMPLOYEES (id)
 	- stores info about all employees
-	- the id is used as a foreign in the EMPLOYEE_LOGS table
+	- the id is used as a foreign key in the EMPLOYEE_LOGS table
 
 - EMPLOYEE_LOGS (employee_id, log_date, hours, job_name, report_num)
 	- employee_id is a foreign key that references the id column in the EMPLOYEES table
 	- realistically, the EMPLOYEES table should be populated before the csv file is uploaded, to make sure that we don't upload a file that has records of an employee that doesn't exist
 	- log_date is stored as a unix timestamp, easier for sorting
 	- report_num is there so we know which reports have already been uploaded
+	- job_name is a foreign key to name in the JOBS table
 	- it might be good to store report_num in its own table instead
 
 - JOBS (name, rate)

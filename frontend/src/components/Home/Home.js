@@ -40,8 +40,9 @@ class Home extends Component {
     // user clicks upload on file, now we must process it
     e.preventDefault()
     e.target.value = null;
-    this.state.ref.current.value = "";
-
+    let currentRef = this.state.ref;
+    currentRef.current.value = "";
+    this.setState({ref: currentRef})
 
     // if file is empty, alert user of this
     if (!this.state.selectedFile) {

@@ -27,7 +27,7 @@ def login():
     token = jwt.encode({'user': id}, SECRET_KEY, algorithm="HS256")
     jwtEncodedToDecoded[token] = id
     resp = make_response(jsonify({'token': token}), 200)
-    resp.set_cookie('token', token, httponly=True)
+    resp.set_cookie('token', token, httponly=True, max_age=60*30)
     return resp
   return jsonify({"message": msg}), status
 
