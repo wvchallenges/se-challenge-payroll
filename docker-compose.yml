@@ -7,30 +7,15 @@ services:
             - 5000:5000
         environment:
             - CLIENT_URL=http://localhost:3000
-        networks:
-            testing_net:
-                ipv4_address: 172.28.1.1
+
     frontend-service:
         build: ./frontend
         ports:
             - 3000:3000
         environment:
             - REACT_APP_BASE_URL=http://localhost:5000
-        networks:
-            testing_net:
-                ipv4_address: 172.28.1.2
+
         links:
             - backend-service
         depends_on:
             - backend-service
-            
-networks:
-    testing_net:
-        driver: bridge
-        ipam:
-            driver: bridge
-            config:
-                - subnet: 172.28.0.0/16
-                - gateway: 10.0.0.1
-    
-            
