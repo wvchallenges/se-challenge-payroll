@@ -19,7 +19,8 @@ class Home extends Component {
       toggled: "Show",
       errorMsg: null,
       successMsg: null,
-      actionStart: false
+      actionStart: false,
+      ref: React.createRef()
     }
   }
 
@@ -39,10 +40,12 @@ class Home extends Component {
     // user clicks upload on file, now we must process it
     e.preventDefault()
     e.target.value = null;
+    this.state.ref.current.value = "";
+
 
     // if file is empty, alert user of this
     if (!this.state.selectedFile) {
-      this.setState({errorMsg: "Please select a file"})
+      this.setState({successMsg: "", errorMsg: "Please select a file"})
       return;
     }
 
@@ -52,6 +55,7 @@ class Home extends Component {
     // start creating our http request with form data of the file
     const formData = new FormData()
     formData.append("file", this.state.selectedFile)
+    this.setState({ selectedFile: null})
 
     // show spinning wheel indicative that we are performing request
     this.setState({actionStart: true})
@@ -114,7 +118,7 @@ class Home extends Component {
       withCredentials: true
     }).then(res => {
       this.setState(
-          {interMsg: "", successMsg: "Redirecting...", actionStart: false})
+          {interMsg: "", errorMsg: "", successMsg: "Redirecting...", actionStart: false})
       // refresh the window on logout, this should redirect us via router
       window.location.reload()
 
@@ -150,7 +154,8 @@ class Home extends Component {
           <form>
             <div className="input-group">
               <input className="form-control" id="formFileLg"
-                     type="file" onChange={this.onChangeFileHandler}/>
+                     type="file" onChange={this.onChangeFileHandler}
+              ref={this.state.ref}/>
               <button className="btn btn-primary" type="submit"
                       onClick={this.onSubmitFileHandler}
                       disabled={this.state.actionStart}>Upload

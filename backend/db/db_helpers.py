@@ -30,7 +30,8 @@ def get_connection():
 def delete_db():
   # remove db file if exists
   try:
-    os.remove(DB_FILENAME)
+    if os.path.isfile(DB_FILENAME):
+      os.remove(DB_FILENAME)
   except Exception as e:
     raise Exception(f"Unable to delete db file: {e}")
     exit(1)

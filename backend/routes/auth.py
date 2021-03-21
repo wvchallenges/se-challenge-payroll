@@ -39,15 +39,15 @@ def verify():
   if 'token' in request.cookies:
     token = request.cookies['token']
   if not token:
-    return jsonify({}), 401
+    return jsonify({"message": "Unauthorized. Missing token in cookies"}), 401
   try:
     if token in jwtEncodedToDecoded:
-      return jsonify({}), 200
+      return jsonify({"message": "Success"}), 200
     decoded = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
     jwtEncodedToDecoded[token] = decoded
-    return jsonify({}), 200
+    return jsonify({"message": "Success"}), 200
   except:
-    return jsonify({}), 401
+    return jsonify({"message": "Token is invalid"}), 401
 
 
 # logout the user and delete the jwt token cookie
