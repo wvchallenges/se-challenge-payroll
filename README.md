@@ -74,10 +74,10 @@ As an example, given the upload of a sample file with the following data:
 
    | date       | hours worked | employee id | job group |
    | ---------- | ------------ | ----------- | --------- |
-   | 2020-01-04 | 10           | 1           | A         |
-   | 2020-01-14 | 5            | 1           | A         |
-   | 2020-01-20 | 3            | 2           | B         |
-   | 2020-01-20 | 4            | 1           | A         |
+   | 4/1/2023   | 10           | 1           | A         |
+   | 14/1/2023  | 5            | 1           | A         |
+   | 20/1/2023  | 3            | 2           | B         |
+   | 20/1/2023  | 4            | 1           | A         |
 
 A request to the report endpoint should return the following JSON response:
 
@@ -88,24 +88,24 @@ A request to the report endpoint should return the following JSON response:
          {
            "employeeId": "1",
            "payPeriod": {
-             "startDate": "2020-01-01",
-             "endDate": "2020-01-15"
+             "startDate": "2023-01-01",
+             "endDate": "2023-01-15"
            },
            "amountPaid": "$300.00"
          },
          {
            "employeeId": "1",
            "payPeriod": {
-             "startDate": "2020-01-16",
-             "endDate": "2020-01-31"
+             "startDate": "2023-01-16",
+             "endDate": "2023-01-31"
            },
            "amountPaid": "$80.00"
          },
          {
            "employeeId": "2",
            "payPeriod": {
-             "startDate": "2020-01-16",
-             "endDate": "2020-01-31"
+             "startDate": "2023-01-16",
+             "endDate": "2023-01-31"
            },
            "amountPaid": "$90.00"
          }
